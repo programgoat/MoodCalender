@@ -1,12 +1,13 @@
 <!DOCTYPE html>
 <html lang="ja">
 <head>
-  <meta charset="UTF-8">
+  <meta charset="UTF-8" />
   <title>MoodCalendar v3</title>
-  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
 
+  <!-- CSS は Part 2 で貼る -->
   <style>
-    /* ===========================
+  /* ===========================
    基本レイアウト
 =========================== */
 
@@ -33,8 +34,7 @@
 body {
   margin: 0;
   min-height: 100vh;
-  font-family: system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI",
-    sans-serif;
+  font-family: system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
   background: radial-gradient(circle at top, #1e293b 0, #020617 55%, #000 100%);
   color: var(--text-main);
   display: flex;
@@ -159,7 +159,6 @@ body {
   box-shadow: 0 0 0 4px rgba(74, 222, 128, 0.18);
 }
 
-/* 使い方ボタン */
 .help-btn {
   padding: 4px 8px;
   border-radius: 50%;
@@ -276,7 +275,6 @@ body {
   text-overflow: ellipsis;
 }
 
-/* 今日 */
 .day-today {
   box-shadow: 0 0 0 2px rgba(56, 189, 248, 0.7);
 }
@@ -295,7 +293,7 @@ body {
 }
 
 /* ===========================
-   モーダル（気分入力）
+   モーダル
 =========================== */
 
 .modal-backdrop {
@@ -332,7 +330,6 @@ body {
   transform: translateY(0) scale(1);
 }
 
-/* 気分ボタン */
 .mood-option {
   flex: 1;
   padding: 7px 0;
@@ -364,6 +361,100 @@ body {
 @keyframes moodPop {
   0% { transform: scale(0.85); opacity: 0.6; }
   100% { transform: scale(1); opacity: 1; }
+}
+
+/* ===========================
+   グラフ
+=========================== */
+
+.graph {
+  display: flex;
+  align-items: flex-end;
+  gap: 4px;
+  height: 70px;
+  margin-top: 4px;
+}
+
+.graph-bar {
+  flex: 1;
+  border-radius: 4px 4px 0 0;
+  background: rgba(30, 64, 175, 0.4);
+  position: relative;
+  overflow: hidden;
+}
+
+.graph-bar-inner {
+  position: absolute;
+  bottom: 0;
+  left: 0;
+  right: 0;
+  background: linear-gradient(180deg, #38bdf8, #0ea5e9);
+  height: 0%;
+  animation: barGrow 0.5s ease-out forwards;
+}
+
+@keyframes barGrow {
+  0% { height: 0%; }
+  100% { height: var(--bar-height); }
+}
+
+/* ===========================
+   嫌なこと入力欄
+=========================== */
+
+.negative-input {
+  width: 100%;
+  margin-top: 10px;
+  padding: 10px;
+  border-radius: 12px;
+  border: 1px solid rgba(148,163,184,0.35);
+  background: rgba(15,23,42,0.85);
+  color: var(--text-main);
+  font-size: 12px;
+  resize: none;
+  min-height: 70px;
+}
+
+.negative-actions {
+  margin-top: 10px;
+  display: flex;
+  justify-content: flex-end;
+}
+
+/* 飛ばすエフェクト */
+.negative-launch-effect {
+  position: fixed;
+  inset: 0;
+  pointer-events: none;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  opacity: 0;
+  transition: 0.25s ease-out;
+  z-index: 999;
+}
+
+.negative-launch-effect.show {
+  opacity: 1;
+}
+
+.negative-card {
+  padding: 14px 18px;
+  background: rgba(15,23,42,0.95);
+  border: 1px solid rgba(148,163,184,0.4);
+  border-radius: 14px;
+  color: var(--text-main);
+  font-size: 13px;
+  max-width: 260px;
+  text-align: center;
+  animation: launchUp 1.4s ease-out forwards;
+  box-shadow: 0 18px 45px rgba(15,23,42,0.9);
+}
+
+@keyframes launchUp {
+  0% { transform: translateY(40px) scale(0.9); opacity: 0; }
+  20% { opacity: 1; }
+  100% { transform: translateY(-260px) scale(0.6); opacity: 0; }
 }
 
 /* ===========================
@@ -418,114 +509,22 @@ body {
   transform: scale(1.05);
 }
 
-/* ===========================
-   グラフ
-=========================== */
-
-.graph {
-  display: flex;
-  align-items: flex-end;
-  gap: 4px;
-  height: 70px;
-  margin-top: 4px;
-}
-
-.graph-bar {
-  flex: 1;
-  border-radius: 4px 4px 0 0;
-  background: rgba(30, 64, 175, 0.4);
-  position: relative;
-  overflow: hidden;
-}
-
-.graph-bar-inner {
-  position: absolute;
-  bottom: 0;
-  left: 0;
-  right: 0;
-  background: linear-gradient(180deg, #38bdf8, #0ea5e9);
-  height: 0%;
-  animation: barGrow 0.5s ease-out forwards;
-}
-
-@keyframes barGrow {
-  0% { height: 0%; }
-  100% { height: var(--bar-height); }
-}
-/* 嫌なこと入力欄 */
-.negative-input {
-  width: 100%;
-  margin-top: 10px;
-  padding: 10px;
-  border-radius: 12px;
-  border: 1px solid rgba(148,163,184,0.35);
-  background: rgba(15,23,42,0.85);
-  color: var(--text-main);
-  font-size: 12px;
-  resize: none;
-  min-height: 70px;
-}
-
-/* ボタン行 */
-.negative-actions {
-  margin-top: 10px;
-  display: flex;
-  justify-content: flex-end;
-}
-
-/* 飛ばすエフェクト */
-.negative-launch-effect {
-  position: fixed;
-  inset: 0;
-  pointer-events: none;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  opacity: 0;
-  transition: 0.25s ease-out;
-  z-index: 999;
-}
-
-.negative-launch-effect.show {
-  opacity: 1;
-}
-
-.negative-card {
-  padding: 14px 18px;
-  background: rgba(15,23,42,0.95);
-  border: 1px solid rgba(148,163,184,0.4);
-  border-radius: 14px;
-  color: var(--text-main);
-  font-size: 13px;
-  max-width: 260px;
-  text-align: center;
-  animation: launchUp 1.4s ease-out forwards;
-  box-shadow: 0 18px 45px rgba(15,23,42,0.9);
-}
-
-@keyframes launchUp {
-  0% { transform: translateY(40px) scale(0.9); opacity: 0; }
-  20% { opacity: 1; }
-  100% { transform: translateY(-260px) scale(0.6); opacity: 0; }
-}
-
   </style>
-
 </head>
+
 <body>
 
   <div class="app">
     <div class="app-inner">
 
-      <!-- 左：カレンダー -->
+      <!-- ▼ 左カラム：カレンダー -->
       <div>
         <header class="header">
           <div class="title-block">
             <div class="logo">M</div>
             <div>
               <div class="title-text-main">
-                Mood Calendar
-                <span class="title-pill">v3</span>
+                Mood Calendar <span class="title-pill">v3</span>
               </div>
               <div class="title-text-sub">
                 カレンダーで、1日の気分とひとことメモを残す。
@@ -538,8 +537,6 @@ body {
             <div class="pill">
               <strong id="today-label"></strong> の今日
             </div>
-
-            <!-- 使い方ボタン -->
             <button id="help-btn" class="help-btn">？</button>
           </div>
         </header>
@@ -572,7 +569,7 @@ body {
         </section>
       </div>
 
-      <!-- 右：詳細・統計 -->
+      <!-- ▼ 右カラム：統計・詳細 -->
       <div class="right-column">
 
         <section class="stat-row">
@@ -582,8 +579,7 @@ body {
               <span class="stat-pill" id="avg-pill">new</span>
             </div>
             <div class="stat-value">
-              <span id="avg-score">–</span>
-              <span>/ 4</span>
+              <span id="avg-score">–</span><span>/ 4</span>
             </div>
           </div>
 
@@ -593,40 +589,12 @@ body {
               <span class="stat-pill bad" id="streak-pill">0 days</span>
             </div>
             <div class="stat-value">
-              <span id="entry-count">0</span>
-              <span>entries</span>
+              <span id="entry-count">0</span><span>entries</span>
             </div>
           </div>
         </section>
-</section>  <!-- ← Selected day カードの終了 -->
 
-<!-- ▼▼▼ ここに追加する ▼▼▼ -->
-<section class="card">
-  <div class="card-header">
-    <div>
-      <div class="card-title">今日嫌だったこと</div>
-      <div class="card-subtitle">
-        今日だけ編集できます。嫌なことを宇宙に飛ばせます。
-      </div>
-    </div>
-  </div>
-
-  <textarea id="negative-input" class="negative-input" maxlength="200"
-    placeholder="今日嫌だったことを書いてください…"></textarea>
-
-  <div class="negative-actions">
-    <button id="negative-launch-btn" class="btn-primary">
-      🚀 嫌なことを飛ばす
-    </button>
-  </div>
-</section>
-<!-- ▲▲▲ ここまで追加 ▲▲▲ -->
-
-<section class="card">
-  <div class="card-header">
-    <div>
-      <div class="card-title">Last 7 days mood</div>
-
+        <!-- ▼ 選択した日の情報 -->
         <section class="card">
           <div class="card-header">
             <div>
@@ -645,13 +613,12 @@ body {
           </div>
         </section>
 
+        <!-- ▼ 直近7日グラフ -->
         <section class="card">
           <div class="card-header">
             <div>
               <div class="card-title">Last 7 days mood</div>
-              <div class="card-subtitle">
-                直近7日間のムードを棒グラフで表示します。
-              </div>
+              <div class="card-subtitle">直近7日間のムードを棒グラフで表示します。</div>
             </div>
           </div>
 
@@ -659,29 +626,45 @@ body {
           <div class="graph-labels" id="graph-labels"></div>
         </section>
 
+        <!-- ▼ 嫌だったこと（独立機能） -->
+        <section class="card">
+          <div class="card-header">
+            <div>
+              <div class="card-title">今日嫌だったこと</div>
+              <div class="card-subtitle">
+                日付とは関係なく、いつでも書いて飛ばせます。
+              </div>
+            </div>
+          </div>
+
+          <textarea id="negative-input" class="negative-input" maxlength="200"
+            placeholder="嫌だったことを書いてください…"></textarea>
+
+          <div class="negative-actions">
+            <button id="negative-launch-btn" class="btn-primary">
+              🚀 嫌なことを飛ばす
+            </button>
+          </div>
+        </section>
+
         <footer class="footer">
           <div class="footer-left">
-            <span>データは</span>
-            <strong>このブラウザだけ</strong>
-            <span>に保存されます。</span>
-            <span class="pill-soft">
-              <strong>ログイン不要</strong> / サーバー送信なし
-            </span>
+            <span>データは</span><strong>このブラウザだけ</strong><span>に保存されます。</span>
+            <span class="pill-soft"><strong>ログイン不要</strong> / サーバー送信なし</span>
           </div>
         </footer>
+
       </div>
     </div>
   </div>
 
-  <!-- ▼▼▼ モーダル：気分入力 ▼▼▼ -->
+  <!-- ▼ モーダル：気分入力 -->
   <div class="modal-backdrop" id="modal-backdrop">
     <div class="modal">
       <div class="modal-header">
         <div>
           <div class="modal-title" id="modal-title">気分を記録</div>
-          <div class="modal-subtitle" id="modal-subtitle">
-            その日の気分とメモを残せます。
-          </div>
+          <div class="modal-subtitle" id="modal-subtitle">その日の気分とメモを残せます。</div>
         </div>
         <button class="modal-close" id="modal-close">×</button>
       </div>
@@ -705,35 +688,31 @@ body {
       </div>
     </div>
   </div>
-  <!-- ▲▲▲ モーダル：気分入力 ▲▲▲ -->
 
-  <!-- ▼▼▼ 使い方モーダル ▼▼▼ -->
+  <!-- ▼ 使い方モーダル -->
   <div class="help-backdrop" id="help-backdrop">
     <div class="help-modal">
       <h2>使い方ガイド</h2>
       <ul>
         <li>日付をタップすると気分を登録できます。</li>
-        <li>今日だけ編集できます。翌日以降は閲覧のみ。</li>
+        <li>気分とメモは今日だけ編集できます。</li>
+        <li>嫌だったことはいつでも書けます。</li>
         <li>データはブラウザに保存されます。</li>
-        <li>スマホとPCでUIが自動調整されます。</li>
       </ul>
       <button id="help-close" class="help-close">閉じる</button>
     </div>
   </div>
-  <!-- ▲▲▲ 使い方モーダル ▲▲▲ -->
 
+  <!-- ▼ 嫌なことを飛ばすエフェクト（必ず script より上） -->
+  <div id="negative-launch-effect" class="negative-launch-effect">
+    <div class="negative-card"></div>
+  </div>
+
+  <!-- JS は Part 3 で貼る -->
   <script>
-    /* ===========================
-   MoodCalendar v3 — JavaScript
-   ・今日だけ編集可能
-   ・翌日以降は閲覧のみ
-   ・スマホ/PC UI判定
-   ・ポップなアニメーション制御
-=========================== */
-
-/* ---------------------------
+  /* ===========================
    日付フォーマット
---------------------------- */
+=========================== */
 function formatDateKey(date) {
   return date.toISOString().split("T")[0];
 }
@@ -746,9 +725,9 @@ function sameDay(a, b) {
   );
 }
 
-/* ---------------------------
-   localStorage
---------------------------- */
+/* ===========================
+   localStorage（気分・メモ）
+=========================== */
 function loadEntries() {
   return JSON.parse(localStorage.getItem("moodEntries") || "{}");
 }
@@ -757,9 +736,20 @@ function saveEntries(entries) {
   localStorage.setItem("moodEntries", JSON.stringify(entries));
 }
 
-/* ---------------------------
+/* ===========================
+   localStorage（嫌だったこと）
+=========================== */
+function saveNegative(text) {
+  localStorage.setItem("negativeToday", text);
+}
+
+function loadNegative() {
+  return localStorage.getItem("negativeToday") || "";
+}
+
+/* ===========================
    UI要素取得
---------------------------- */
+=========================== */
 const calendarEl = document.getElementById("calendar");
 const monthLabel = document.getElementById("month-label");
 const todayLabel = document.getElementById("today-label");
@@ -782,23 +772,22 @@ const helpBtn = document.getElementById("help-btn");
 const helpBackdrop = document.getElementById("help-backdrop");
 const helpClose = document.getElementById("help-close");
 
-/* ---------------------------
+/* 嫌なこと */
+const negativeInput = document.getElementById("negative-input");
+const negativeLaunchBtn = document.getElementById("negative-launch-btn");
+const negativeEffect = document.getElementById("negative-launch-effect");
+const negativeCard = negativeEffect.querySelector(".negative-card");
+
+/* ===========================
    状態
---------------------------- */
+=========================== */
 let currentDate = new Date();
 let selectedDate = null;
 let selectedMood = null;
 
-/* ---------------------------
-   スマホ判定
---------------------------- */
-function isMobile() {
-  return window.innerWidth < 768;
-}
-
-/* ---------------------------
+/* ===========================
    カレンダー描画
---------------------------- */
+=========================== */
 function renderCalendar() {
   calendarEl.innerHTML = "";
 
@@ -858,27 +847,19 @@ function renderCalendar() {
   }
 }
 
-/* ---------------------------
+/* ===========================
    日付クリック
---------------------------- */
+=========================== */
 function onDayClick(dateObj) {
   selectedDate = dateObj;
   const key = formatDateKey(dateObj);
   const entries = loadEntries();
   const today = new Date();
 
-  // 選択日表示
   updateSelectedDayDisplay();
+  openModal(); // ← いつでも開く
 
-  // 今日以外 → 編集禁止
-  if (!sameDay(dateObj, today)) {
-    return; // モーダル開かない
-  }
-
-  // 今日 → 編集可能
-  openModal();
-
-  // 既存データ
+  // mood / note の読み込み
   if (entries[key]) {
     selectedMood = entries[key].mood;
     noteEl.value = entries[key].note;
@@ -887,20 +868,23 @@ function onDayClick(dateObj) {
     moodButtons.forEach((btn) => {
       btn.classList.toggle("active", btn.dataset.mood === selectedMood);
     });
-    const negativeInput = document.getElementById("negative-input"); 
-    negativeInput.value = entries[key].negative || "";
   } else {
     selectedMood = null;
     noteEl.value = "";
     charCount.textContent = "0 / 120";
     moodButtons.forEach((btn) => btn.classList.remove("active"));
-    const negativeInput = document.getElementById("negative-input"); negativeInput.value = "";
   }
+
+  // 今日だけ編集可能
+  const isToday = sameDay(dateObj, today);
+  moodButtons.forEach(btn => btn.disabled = !isToday);
+  noteEl.disabled = !isToday;
+  saveBtn.disabled = !isToday;
 }
 
-/* ---------------------------
+/* ===========================
    選択日表示（右側）
---------------------------- */
+=========================== */
 function updateSelectedDayDisplay() {
   if (!selectedDate) {
     selectedDayInfo.textContent = "まだ日付が選択されていません。";
@@ -922,9 +906,9 @@ function updateSelectedDayDisplay() {
   }
 }
 
-/* ---------------------------
+/* ===========================
    モーダル
---------------------------- */
+=========================== */
 function openModal() {
   modalBackdrop.classList.add("show");
 }
@@ -938,27 +922,28 @@ modalBackdrop.addEventListener("click", (e) => {
   if (e.target === modalBackdrop) closeModal();
 });
 
-/* ---------------------------
+/* ===========================
    気分ボタン
---------------------------- */
+=========================== */
 moodButtons.forEach((btn) => {
   btn.addEventListener("click", () => {
+    if (btn.disabled) return;
     moodButtons.forEach((b) => b.classList.remove("active"));
     btn.classList.add("active");
     selectedMood = btn.dataset.mood;
   });
 });
 
-/* ---------------------------
+/* ===========================
    メモ文字数
---------------------------- */
+=========================== */
 noteEl.addEventListener("input", () => {
   charCount.textContent = `${noteEl.value.length} / 120`;
 });
 
-/* ---------------------------
-   保存
---------------------------- */
+/* ===========================
+   保存（今日だけ）
+=========================== */
 saveBtn.addEventListener("click", () => {
   if (!selectedDate || !selectedMood) return;
 
@@ -976,7 +961,6 @@ saveBtn.addEventListener("click", () => {
     mood: selectedMood,
     label: moodLabels[selectedMood],
     note: noteEl.value,
-    negative: document.getElementById("negative-input").value, 
     createdAt: new Date().toISOString(),
   };
 
@@ -986,17 +970,17 @@ saveBtn.addEventListener("click", () => {
   updateSelectedDayDisplay();
 });
 
-/* ---------------------------
+/* ===========================
    クリア
---------------------------- */
+=========================== */
 clearBtn.addEventListener("click", () => {
   noteEl.value = "";
   charCount.textContent = "0 / 120";
 });
 
-/* ---------------------------
+/* ===========================
    月移動
---------------------------- */
+=========================== */
 document.getElementById("prev-month").addEventListener("click", () => {
   currentDate.setMonth(currentDate.getMonth() - 1);
   renderCalendar();
@@ -1007,9 +991,9 @@ document.getElementById("next-month").addEventListener("click", () => {
   renderCalendar();
 });
 
-/* ---------------------------
+/* ===========================
    使い方モーダル
---------------------------- */
+=========================== */
 helpBtn.addEventListener("click", () => {
   helpBackdrop.classList.add("show");
 });
@@ -1022,9 +1006,9 @@ helpBackdrop.addEventListener("click", (e) => {
   if (e.target === helpBackdrop) helpBackdrop.classList.remove("show");
 });
 
-/* ---------------------------
+/* ===========================
    グラフ描画
---------------------------- */
+=========================== */
 function renderGraph() {
   const entries = loadEntries();
   const today = new Date();
@@ -1065,9 +1049,31 @@ function renderGraph() {
   });
 }
 
-/* ---------------------------
+/* ===========================
+   嫌なこと（独立）
+=========================== */
+negativeInput.value = loadNegative();
+
+negativeInput.addEventListener("input", (e) => {
+  saveNegative(e.target.value);
+});
+
+/* 飛ばすエフェクト */
+negativeLaunchBtn.addEventListener("click", () => {
+  const text = negativeInput.value.trim();
+  if (!text) return;
+
+  negativeCard.textContent = text;
+  negativeEffect.classList.add("show");
+
+  setTimeout(() => {
+    negativeEffect.classList.remove("show");
+  }, 1400);
+});
+
+/* ===========================
    初期化
---------------------------- */
+=========================== */
 function init() {
   const today = new Date();
   todayLabel.textContent = `${today.getMonth() + 1}月${today.getDate()}日`;
@@ -1075,34 +1081,8 @@ function init() {
   renderCalendar();
   renderGraph();
 }
-/* ---------------------------
-   嫌なことを飛ばすエフェクト
---------------------------- */
-const negativeLaunchBtn = document.getElementById("negative-launch-btn");
-const negativeEffect = document.getElementById("negative-launch-effect");
-const negativeCard = negativeEffect.querySelector(".negative-card");
-
-negativeLaunchBtn.addEventListener("click", () => {
-  const text = document.getElementById("negative-input").value.trim();
-  if (!text) return;
-
-  // カードにテキストを入れる
-  negativeCard.textContent = text;
-
-  // エフェクト開始
-  negativeEffect.classList.add("show");
-
-  // 終了処理
-  setTimeout(() => {
-    negativeEffect.classList.remove("show");
-  }, 1400);
-});
 
 init();
-<!-- 嫌なことを飛ばすエフェクト -->
-<div id="negative-launch-effect" class="negative-launch-effect">
-  <div class="negative-card"></div>
-</div>
 
   </script>
 
