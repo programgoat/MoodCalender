@@ -2,1095 +2,158 @@
 <html lang="ja">
 <head>
   <meta charset="UTF-8" />
-  <title>MoodCalendar v3</title>
+  <title>MoodCalendar minimal test</title>
   <meta name="viewport" content="width=device-width, initial-scale=1" />
-
-  <!-- CSS は Part 2 で貼る -->
   <style>
-  /* ===========================
-   基本レイアウト
-=========================== */
-
-:root {
-  --bg: #0f172a;
-  --card: #020617;
-  --accent: #38bdf8;
-  --accent-soft: rgba(56, 189, 248, 0.15);
-  --text-main: #e5e7eb;
-  --text-sub: #9ca3af;
-  --danger: #f97373;
-  --success: #4ade80;
-  --border: #1f2937;
-  --radius-lg: 18px;
-  --radius-md: 10px;
-  --shadow-soft: 0 18px 45px rgba(15, 23, 42, 0.9);
-  --transition-fast: 0.18s ease-out;
-}
-
-* {
-  box-sizing: border-box;
-}
-
-body {
-  margin: 0;
-  min-height: 100vh;
-  font-family: system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
-  background: radial-gradient(circle at top, #1e293b 0, #020617 55%, #000 100%);
-  color: var(--text-main);
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  padding: 24px;
-}
-
-/* ===========================
-   アプリ全体
-=========================== */
-
-.app {
-  width: 100%;
-  max-width: 1120px;
-  background: linear-gradient(145deg, #020617 0%, #020617 55%, #020617 100%);
-  border-radius: 26px;
-  border: 1px solid rgba(148, 163, 184, 0.18);
-  box-shadow: var(--shadow-soft);
-  padding: 22px 22px 18px;
-  position: relative;
-  overflow: hidden;
-}
-
-.app::before {
-  content: "";
-  position: absolute;
-  inset: -40%;
-  background:
-    radial-gradient(circle at 0% 0%, rgba(56, 189, 248, 0.18) 0, transparent 55%),
-    radial-gradient(circle at 100% 0%, rgba(129, 140, 248, 0.18) 0, transparent 55%);
-  opacity: 0.7;
-  pointer-events: none;
-}
-
-.app-inner {
-  position: relative;
-  z-index: 1;
-  display: grid;
-  grid-template-columns: minmax(0, 1.1fr) minmax(0, 1.1fr);
-  gap: 18px;
-}
-
-@media (max-width: 900px) {
-  .app-inner {
-    grid-template-columns: minmax(0, 1fr);
-  }
-}
-
-/* ===========================
-   ヘッダー
-=========================== */
-
-.header {
-  display: flex;
-  align-items: center;
-  justify-content: space-between;
-  margin-bottom: 16px;
-  gap: 12px;
-}
-
-.title-block {
-  display: flex;
-  align-items: center;
-  gap: 10px;
-}
-
-.logo {
-  width: 32px;
-  height: 32px;
-  border-radius: 999px;
-  background: radial-gradient(circle at 30% 0%, #38bdf8 0, #0ea5e9 40%, #1d4ed8 100%);
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  color: #e5f3ff;
-  font-weight: 700;
-  font-size: 18px;
-  box-shadow: 0 0 0 1px rgba(15, 23, 42, 0.7),
-    0 10px 25px rgba(56, 189, 248, 0.45);
-}
-
-.title-text-main {
-  font-size: 18px;
-  font-weight: 600;
-  letter-spacing: 0.03em;
-  display: flex;
-  align-items: center;
-  gap: 6px;
-}
-
-.title-pill {
-  font-size: 11px;
-  padding: 2px 8px;
-  border-radius: 999px;
-  border: 1px solid rgba(148, 163, 184, 0.4);
-  color: var(--text-sub);
-  background: rgba(15, 23, 42, 0.7);
-}
-
-.title-text-sub {
-  font-size: 12px;
-  color: var(--text-sub);
-  margin-top: 2px;
-}
-
-.header-right {
-  display: flex;
-  align-items: center;
-  gap: 8px;
-  font-size: 11px;
-  color: var(--text-sub);
-  flex-wrap: wrap;
-  justify-content: flex-end;
-}
-
-.dot {
-  width: 7px;
-  height: 7px;
-  border-radius: 999px;
-  background: var(--success);
-  box-shadow: 0 0 0 4px rgba(74, 222, 128, 0.18);
-}
-
-.help-btn {
-  padding: 4px 8px;
-  border-radius: 50%;
-  border: 1px solid rgba(148, 163, 184, 0.6);
-  background: rgba(15, 23, 42, 0.9);
-  color: var(--text-sub);
-  cursor: pointer;
-  font-size: 14px;
-  transition: 0.2s;
-}
-
-.help-btn:hover {
-  transform: scale(1.15);
-  border-color: var(--accent);
-  color: #e5e7eb;
-}
-
-/* ===========================
-   カード
-=========================== */
-
-.card {
-  background: radial-gradient(circle at top left, rgba(56, 189, 248, 0.12), transparent 55%),
-    radial-gradient(circle at bottom right, rgba(129, 140, 248, 0.12), transparent 55%),
-    rgba(15, 23, 42, 0.96);
-  border-radius: var(--radius-lg);
-  border: 1px solid rgba(148, 163, 184, 0.35);
-  padding: 16px 16px 14px;
-  position: relative;
-  overflow: hidden;
-  animation: cardPop 0.4s ease-out;
-}
-
-@keyframes cardPop {
-  0% { transform: scale(0.97); opacity: 0; }
-  100% { transform: scale(1); opacity: 1; }
-}
-
-/* ===========================
-   カレンダー
-=========================== */
-
-.calendar-header button {
-  padding: 4px 10px;
-  border-radius: 999px;
-  border: 1px solid rgba(148, 163, 184, 0.6);
-  background: rgba(15, 23, 42, 0.9);
-  color: var(--text-sub);
-  cursor: pointer;
-  font-size: 11px;
-  transition: 0.2s;
-}
-
-.calendar-header button:hover {
-  transform: scale(1.1);
-  border-color: var(--accent);
-  color: #e5e7eb;
-}
-
-.weekday-row {
-  display: grid;
-  grid-template-columns: repeat(7, 1fr);
-  gap: 4px;
-  margin-bottom: 4px;
-  font-size: 11px;
-  color: var(--text-sub);
-  text-align: center;
-}
-
-.calendar {
-  display: grid;
-  grid-template-columns: repeat(7, 1fr);
-  gap: 6px;
-}
-
-.day {
-  border-radius: 10px;
-  border: 1px solid rgba(148, 163, 184, 0.35);
-  background: rgba(15, 23, 42, 0.9);
-  padding: 8px 6px;
-  text-align: right;
-  cursor: pointer;
-  transition: 0.18s;
-  min-height: 52px;
-  position: relative;
-  font-size: 11px;
-  color: var(--text-sub);
-  display: flex;
-  flex-direction: column;
-  justify-content: space-between;
-}
-
-.day:hover {
-  transform: scale(1.05);
-  box-shadow: 0 10px 25px rgba(15, 23, 42, 0.9);
-}
-
-.day:active {
-  transform: scale(0.92);
-}
-
-.day-number {
-  font-size: 12px;
-  font-weight: 500;
-  color: #e5e7eb;
-}
-
-.day-mood-label {
-  font-size: 10px;
-  opacity: 0.9;
-  text-align: left;
-  white-space: nowrap;
-  overflow: hidden;
-  text-overflow: ellipsis;
-}
-
-.day-today {
-  box-shadow: 0 0 0 2px rgba(56, 189, 248, 0.7);
-}
-
-/* 気分色 */
-.mood-bad { background: linear-gradient(145deg, #7f1d1d, #b91c1c) !important; }
-.mood-meh { background: linear-gradient(145deg, #111827, #374151) !important; }
-.mood-good { background: linear-gradient(145deg, #14532d, #16a34a) !important; }
-.mood-great { background: linear-gradient(145deg, #78350f, #f59e0b) !important; }
-
-.mood-bad .day-number,
-.mood-meh .day-number,
-.mood-good .day-number,
-.mood-great .day-number {
-  color: #f9fafb;
-}
-
-/* ===========================
-   モーダル
-=========================== */
-
-.modal-backdrop {
-  position: fixed;
-  inset: 0;
-  background: rgba(15, 23, 42, 0.7);
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  z-index: 50;
-  opacity: 0;
-  pointer-events: none;
-  transition: opacity 0.18s ease-out;
-}
-
-.modal-backdrop.show {
-  opacity: 1;
-  pointer-events: auto;
-}
-
-.modal {
-  width: 100%;
-  max-width: 420px;
-  background: rgba(15, 23, 42, 0.98);
-  border-radius: 18px;
-  border: 1px solid rgba(148, 163, 184, 0.5);
-  box-shadow: 0 18px 45px rgba(15, 23, 42, 0.95);
-  padding: 14px 14px 12px;
-  transform: translateY(20px) scale(0.95);
-  transition: 0.25s ease-out;
-}
-
-.modal-backdrop.show .modal {
-  transform: translateY(0) scale(1);
-}
-
-.mood-option {
-  flex: 1;
-  padding: 7px 0;
-  border-radius: 999px;
-  border: 1px solid rgba(148, 163, 184, 0.4);
-  background: rgba(15, 23, 42, 0.9);
-  color: var(--text-sub);
-  font-size: 11px;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  gap: 4px;
-  cursor: pointer;
-  transition: 0.2s;
-}
-
-.mood-option:hover {
-  transform: scale(1.1);
-  border-color: var(--accent);
-}
-
-.mood-option.active {
-  animation: moodPop 0.25s ease-out;
-  border-color: var(--accent);
-  background: rgba(56, 189, 248, 0.25);
-  color: #e5f3ff;
-}
-
-@keyframes moodPop {
-  0% { transform: scale(0.85); opacity: 0.6; }
-  100% { transform: scale(1); opacity: 1; }
-}
-
-/* ===========================
-   グラフ
-=========================== */
-
-.graph {
-  display: flex;
-  align-items: flex-end;
-  gap: 4px;
-  height: 70px;
-  margin-top: 4px;
-}
-
-.graph-bar {
-  flex: 1;
-  border-radius: 4px 4px 0 0;
-  background: rgba(30, 64, 175, 0.4);
-  position: relative;
-  overflow: hidden;
-}
-
-.graph-bar-inner {
-  position: absolute;
-  bottom: 0;
-  left: 0;
-  right: 0;
-  background: linear-gradient(180deg, #38bdf8, #0ea5e9);
-  height: 0%;
-  animation: barGrow 0.5s ease-out forwards;
-}
-
-@keyframes barGrow {
-  0% { height: 0%; }
-  100% { height: var(--bar-height); }
-}
-
-/* ===========================
-   嫌なこと入力欄
-=========================== */
-
-.negative-input {
-  width: 100%;
-  margin-top: 10px;
-  padding: 10px;
-  border-radius: 12px;
-  border: 1px solid rgba(148,163,184,0.35);
-  background: rgba(15,23,42,0.85);
-  color: var(--text-main);
-  font-size: 12px;
-  resize: none;
-  min-height: 70px;
-}
-
-.negative-actions {
-  margin-top: 10px;
-  display: flex;
-  justify-content: flex-end;
-}
-
-/* 飛ばすエフェクト */
-.negative-launch-effect {
-  position: fixed;
-  inset: 0;
-  pointer-events: none;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  opacity: 0;
-  transition: 0.25s ease-out;
-  z-index: 999;
-}
-
-.negative-launch-effect.show {
-  opacity: 1;
-}
-
-.negative-card {
-  padding: 14px 18px;
-  background: rgba(15,23,42,0.95);
-  border: 1px solid rgba(148,163,184,0.4);
-  border-radius: 14px;
-  color: var(--text-main);
-  font-size: 13px;
-  max-width: 260px;
-  text-align: center;
-  animation: launchUp 1.4s ease-out forwards;
-  box-shadow: 0 18px 45px rgba(15,23,42,0.9);
-}
-
-@keyframes launchUp {
-  0% { transform: translateY(40px) scale(0.9); opacity: 0; }
-  20% { opacity: 1; }
-  100% { transform: translateY(-260px) scale(0.6); opacity: 0; }
-}
-
-/* ===========================
-   使い方モーダル
-=========================== */
-
-.help-backdrop {
-  position: fixed;
-  inset: 0;
-  background: rgba(0,0,0,0.6);
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  z-index: 60;
-  opacity: 0;
-  pointer-events: none;
-  transition: 0.2s;
-}
-
-.help-backdrop.show {
-  opacity: 1;
-  pointer-events: auto;
-}
-
-.help-modal {
-  background: #fff;
-  color: #333;
-  padding: 20px;
-  border-radius: 14px;
-  width: 90%;
-  max-width: 380px;
-  animation: helpPop 0.25s ease-out;
-}
-
-@keyframes helpPop {
-  0% { transform: scale(0.8); opacity: 0; }
-  100% { transform: scale(1); opacity: 1; }
-}
-
-.help-close {
-  margin-top: 12px;
-  padding: 6px 12px;
-  border-radius: 8px;
-  border: none;
-  background: #38bdf8;
-  color: white;
-  cursor: pointer;
-  transition: 0.2s;
-}
-
-.help-close:hover {
-  transform: scale(1.05);
-}
-
+    body {
+      margin: 0;
+      min-height: 100vh;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      background: #020617;
+      color: #e5e7eb;
+      font-family: system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
+    }
+    .wrap {
+      width: 100%;
+      max-width: 480px;
+      padding: 20px;
+      border-radius: 18px;
+      border: 1px solid rgba(148,163,184,0.4);
+      background: #020617;
+      box-shadow: 0 18px 45px rgba(0,0,0,0.7);
+    }
+    .card-title {
+      font-size: 16px;
+      font-weight: 600;
+      margin-bottom: 4px;
+    }
+    .card-subtitle {
+      font-size: 12px;
+      color: #9ca3af;
+      margin-bottom: 10px;
+    }
+    .negative-input {
+      width: 100%;
+      margin-top: 6px;
+      padding: 10px;
+      border-radius: 10px;
+      border: 1px solid rgba(148,163,184,0.35);
+      background: rgba(15,23,42,0.9);
+      color: #e5e7eb;
+      font-size: 12px;
+      resize: none;
+      min-height: 70px;
+    }
+    .negative-actions {
+      margin-top: 10px;
+      display: flex;
+      justify-content: flex-end;
+    }
+    .btn-primary {
+      padding: 6px 12px;
+      border-radius: 999px;
+      border: 1px solid rgba(56,189,248,0.8);
+      background: rgba(56,189,248,0.15);
+      color: #e0f2fe;
+      font-size: 12px;
+      cursor: pointer;
+      transition: 0.18s;
+    }
+    .btn-primary:hover {
+      transform: scale(1.05);
+      background: rgba(56,189,248,0.25);
+    }
+
+    /* 飛ばすエフェクト */
+    .negative-launch-effect {
+      position: fixed;
+      inset: 0;
+      pointer-events: none;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      opacity: 0;
+      transition: 0.25s ease-out;
+      z-index: 999;
+    }
+    .negative-launch-effect.show {
+      opacity: 1;
+    }
+    .negative-card {
+      padding: 14px 18px;
+      background: rgba(15,23,42,0.95);
+      border: 1px solid rgba(148,163,184,0.4);
+      border-radius: 14px;
+      color: #e5e7eb;
+      font-size: 13px;
+      max-width: 260px;
+      text-align: center;
+      box-shadow: 0 18px 45px rgba(15,23,42,0.9);
+      animation: launchUp 1.4s ease-out forwards;
+    }
+    @keyframes launchUp {
+      0% { transform: translateY(40px) scale(0.9); opacity: 0; }
+      20% { opacity: 1; }
+      100% { transform: translateY(-260px) scale(0.6); opacity: 0; }
+    }
   </style>
 </head>
-
 <body>
+  <div class="wrap">
+    <div class="card-title">今日嫌だったこと</div>
+    <div class="card-subtitle">日付とは関係なく、いつでも書いて飛ばせます。</div>
 
-  <div class="app">
-    <div class="app-inner">
+    <textarea id="negative-input" class="negative-input" maxlength="200"
+      placeholder="嫌だったことを書いてください…"></textarea>
 
-      <!-- ▼ 左カラム：カレンダー -->
-      <div>
-        <header class="header">
-          <div class="title-block">
-            <div class="logo">M</div>
-            <div>
-              <div class="title-text-main">
-                Mood Calendar <span class="title-pill">v3</span>
-              </div>
-              <div class="title-text-sub">
-                カレンダーで、1日の気分とひとことメモを残す。
-              </div>
-            </div>
-          </div>
-
-          <div class="header-right">
-            <div class="dot"></div>
-            <div class="pill">
-              <strong id="today-label"></strong> の今日
-            </div>
-            <button id="help-btn" class="help-btn">？</button>
-          </div>
-        </header>
-
-        <section class="card">
-          <div class="card-header">
-            <div>
-              <div class="card-title">Mood calendar</div>
-              <div class="card-subtitle">
-                日付をクリックして、その日の気分とメモを登録できます。
-              </div>
-            </div>
-            <div class="badge">
-              <span class="badge-dot"></span>
-              local only / auto-save
-            </div>
-          </div>
-
-          <div class="calendar-header">
-            <button id="prev-month">← 前の月</button>
-            <strong id="month-label"></strong>
-            <button id="next-month">次の月 →</button>
-          </div>
-
-          <div class="weekday-row">
-            <div>日</div><div>月</div><div>火</div><div>水</div><div>木</div><div>金</div><div>土</div>
-          </div>
-
-          <div class="calendar" id="calendar"></div>
-        </section>
-      </div>
-
-      <!-- ▼ 右カラム：統計・詳細 -->
-      <div class="right-column">
-
-        <section class="stat-row">
-          <div class="stat-card">
-            <div class="stat-label">
-              <span>今月の平均ムード</span>
-              <span class="stat-pill" id="avg-pill">new</span>
-            </div>
-            <div class="stat-value">
-              <span id="avg-score">–</span><span>/ 4</span>
-            </div>
-          </div>
-
-          <div class="stat-card">
-            <div class="stat-label">
-              <span>直近7日間の記録</span>
-              <span class="stat-pill bad" id="streak-pill">0 days</span>
-            </div>
-            <div class="stat-value">
-              <span id="entry-count">0</span><span>entries</span>
-            </div>
-          </div>
-        </section>
-
-        <!-- ▼ 選択した日の情報 -->
-        <section class="card">
-          <div class="card-header">
-            <div>
-              <div class="card-title">Selected day</div>
-              <div class="card-subtitle">
-                カレンダーで選択した日の気分とメモを表示します。
-              </div>
-            </div>
-          </div>
-
-          <div class="selected-day-info" id="selected-day-info">
-            まだ日付が選択されていません。
-          </div>
-          <div class="note-box" id="selected-note-box">
-            <span class="note-empty">メモはまだありません。</span>
-          </div>
-        </section>
-
-        <!-- ▼ 直近7日グラフ -->
-        <section class="card">
-          <div class="card-header">
-            <div>
-              <div class="card-title">Last 7 days mood</div>
-              <div class="card-subtitle">直近7日間のムードを棒グラフで表示します。</div>
-            </div>
-          </div>
-
-          <div class="graph" id="graph"></div>
-          <div class="graph-labels" id="graph-labels"></div>
-        </section>
-
-        <!-- ▼ 嫌だったこと（独立機能） -->
-        <section class="card">
-          <div class="card-header">
-            <div>
-              <div class="card-title">今日嫌だったこと</div>
-              <div class="card-subtitle">
-                日付とは関係なく、いつでも書いて飛ばせます。
-              </div>
-            </div>
-          </div>
-
-          <textarea id="negative-input" class="negative-input" maxlength="200"
-            placeholder="嫌だったことを書いてください…"></textarea>
-
-          <div class="negative-actions">
-            <button id="negative-launch-btn" class="btn-primary">
-              🚀 嫌なことを飛ばす
-            </button>
-          </div>
-        </section>
-
-        <footer class="footer">
-          <div class="footer-left">
-            <span>データは</span><strong>このブラウザだけ</strong><span>に保存されます。</span>
-            <span class="pill-soft"><strong>ログイン不要</strong> / サーバー送信なし</span>
-          </div>
-        </footer>
-
-      </div>
+    <div class="negative-actions">
+      <button id="negative-launch-btn" class="btn-primary">
+        🚀 嫌なことを飛ばす
+      </button>
     </div>
   </div>
 
-  <!-- ▼ モーダル：気分入力 -->
-  <div class="modal-backdrop" id="modal-backdrop">
-    <div class="modal">
-      <div class="modal-header">
-        <div>
-          <div class="modal-title" id="modal-title">気分を記録</div>
-          <div class="modal-subtitle" id="modal-subtitle">その日の気分とメモを残せます。</div>
-        </div>
-        <button class="modal-close" id="modal-close">×</button>
-      </div>
-
-      <div class="mood-scale" id="mood-scale">
-        <button class="mood-option" data-mood="bad"><span>😣</span><strong>しんどい</strong></button>
-        <button class="mood-option" data-mood="meh"><span>😐</span><strong>ふつう</strong></button>
-        <button class="mood-option" data-mood="good"><span>🙂</span><strong>わりと良い</strong></button>
-        <button class="mood-option" data-mood="great"><span>😄</span><strong>最高</strong></button>
-      </div>
-
-      <div class="textarea-label">
-        <span>ひとことメモ</span>
-        <span id="char-count">0 / 120</span>
-      </div>
-      <textarea id="note" maxlength="120"></textarea>
-
-      <div class="modal-actions">
-        <button class="btn-secondary" id="clear-btn">クリア</button>
-        <button class="btn-primary" id="save-btn"><span>➤</span>Save</button>
-      </div>
-    </div>
-  </div>
-
-  <!-- ▼ 使い方モーダル -->
-  <div class="help-backdrop" id="help-backdrop">
-    <div class="help-modal">
-      <h2>使い方ガイド</h2>
-      <ul>
-        <li>日付をタップすると気分を登録できます。</li>
-        <li>気分とメモは今日だけ編集できます。</li>
-        <li>嫌だったことはいつでも書けます。</li>
-        <li>データはブラウザに保存されます。</li>
-      </ul>
-      <button id="help-close" class="help-close">閉じる</button>
-    </div>
-  </div>
-  <div id="negative-launch-effect" class="negative-launch-effect">
-  <div class="negative-card"></div>
-    </div>
-
-  <!-- ▼ 嫌なことを飛ばすエフェクト（必ず script より上） -->
+  <!-- エフェクト本体（必ず script の上） -->
   <div id="negative-launch-effect" class="negative-launch-effect">
     <div class="negative-card"></div>
   </div>
 
   <script>
-  /* ===========================
-   日付フォーマット
-=========================== */
-function formatDateKey(date) {
-  return date.toISOString().split("T")[0];
-}
-
-function sameDay(a, b) {
-  return (
-    a.getFullYear() === b.getFullYear() &&
-    a.getMonth() === b.getMonth() &&
-    a.getDate() === b.getDate()
-  );
-}
-
-/* ===========================
-   localStorage（気分・メモ）
-=========================== */
-function loadEntries() {
-  return JSON.parse(localStorage.getItem("moodEntries") || "{}");
-}
-
-function saveEntries(entries) {
-  localStorage.setItem("moodEntries", JSON.stringify(entries));
-}
-
-/* ===========================
-   localStorage（嫌だったこと）
-=========================== */
-function saveNegative(text) {
-  localStorage.setItem("negativeToday", text);
-}
-
-function loadNegative() {
-  return localStorage.getItem("negativeToday") || "";
-}
-
-/* ===========================
-   UI要素取得
-=========================== */
-const calendarEl = document.getElementById("calendar");
-const monthLabel = document.getElementById("month-label");
-const todayLabel = document.getElementById("today-label");
-
-const modalBackdrop = document.getElementById("modal-backdrop");
-const modalClose = document.getElementById("modal-close");
-const moodButtons = document.querySelectorAll(".mood-option");
-const noteEl = document.getElementById("note");
-const charCount = document.getElementById("char-count");
-const saveBtn = document.getElementById("save-btn");
-const clearBtn = document.getElementById("clear-btn");
-
-const selectedDayInfo = document.getElementById("selected-day-info");
-const selectedNoteBox = document.getElementById("selected-note-box");
-
-const graphEl = document.getElementById("graph");
-const graphLabelsEl = document.getElementById("graph-labels");
-
-const helpBtn = document.getElementById("help-btn");
-const helpBackdrop = document.getElementById("help-backdrop");
-const helpClose = document.getElementById("help-close");
-
-/* 嫌なこと */
-const negativeInput = document.getElementById("negative-input");
-const negativeLaunchBtn = document.getElementById("negative-launch-btn");
-const negativeEffect = document.getElementById("negative-launch-effect");
-const negativeCard = negativeEffect.querySelector(".negative-card");
-
-/* ===========================
-   状態
-=========================== */
-let currentDate = new Date();
-let selectedDate = null;
-let selectedMood = null;
-
-/* ===========================
-   カレンダー描画
-=========================== */
-function renderCalendar() {
-  calendarEl.innerHTML = "";
-
-  const year = currentDate.getFullYear();
-  const month = currentDate.getMonth();
-
-  monthLabel.textContent = `${year}年 ${month + 1}月`;
-
-  const firstDay = new Date(year, month, 1);
-  const lastDay = new Date(year, month + 1, 0);
-
-  const startWeekday = firstDay.getDay();
-  const totalDays = lastDay.getDate();
-
-  const entries = loadEntries();
-  const today = new Date();
-
-  // 空白
-  for (let i = 0; i < startWeekday; i++) {
-    const blank = document.createElement("div");
-    calendarEl.appendChild(blank);
-  }
-
-  // 日付
-  for (let d = 1; d <= totalDays; d++) {
-    const cell = document.createElement("div");
-    cell.className = "day";
-
-    const dateObj = new Date(year, month, d);
-    const key = formatDateKey(dateObj);
-
-    // 今日
-    if (sameDay(dateObj, today)) {
-      cell.classList.add("day-today");
+    // 独立保存
+    function saveNegative(text) {
+      localStorage.setItem("negativeToday", text);
+    }
+    function loadNegative() {
+      return localStorage.getItem("negativeToday") || "";
     }
 
-    // mood
-    if (entries[key]) {
-      const mood = entries[key].mood;
-      cell.classList.add(`mood-${mood}`);
+    const negativeInput = document.getElementById("negative-input");
+    const negativeLaunchBtn = document.getElementById("negative-launch-btn");
+    const negativeEffect = document.getElementById("negative-launch-effect");
+    const negativeCard = negativeEffect.querySelector(".negative-card");
 
-      const label = document.createElement("div");
-      label.className = "day-mood-label";
-      label.textContent = entries[key].label;
-      cell.appendChild(label);
-    }
+    // 初期表示
+    negativeInput.value = loadNegative();
 
-    const num = document.createElement("div");
-    num.className = "day-number";
-    num.textContent = d;
-    cell.appendChild(num);
-
-    // クリック
-    cell.addEventListener("click", () => onDayClick(dateObj));
-
-    calendarEl.appendChild(cell);
-  }
-}
-
-/* ===========================
-   日付クリック
-=========================== */
-function onDayClick(dateObj) {
-  selectedDate = dateObj;
-  const key = formatDateKey(dateObj);
-  const entries = loadEntries();
-  const today = new Date();
-
-  updateSelectedDayDisplay();
-  openModal(); // ← いつでも開く
-
-  // mood / note の読み込み
-  if (entries[key]) {
-    selectedMood = entries[key].mood;
-    noteEl.value = entries[key].note;
-    charCount.textContent = `${noteEl.value.length} / 120`;
-
-    moodButtons.forEach((btn) => {
-      btn.classList.toggle("active", btn.dataset.mood === selectedMood);
+    // 入力保存
+    negativeInput.addEventListener("input", (e) => {
+      saveNegative(e.target.value);
     });
-  } else {
-    selectedMood = null;
-    noteEl.value = "";
-    charCount.textContent = "0 / 120";
-    moodButtons.forEach((btn) => btn.classList.remove("active"));
-  }
 
-  // 今日だけ編集可能
-  const isToday = sameDay(dateObj, today);
-  moodButtons.forEach(btn => btn.disabled = !isToday);
-  noteEl.disabled = !isToday;
-  saveBtn.disabled = !isToday;
-}
+    // 飛ばすエフェクト
+    negativeLaunchBtn.addEventListener("click", () => {
+      const text = negativeInput.value.trim();
+      if (!text) return;
 
-/* ===========================
-   選択日表示（右側）
-=========================== */
-function updateSelectedDayDisplay() {
-  if (!selectedDate) {
-    selectedDayInfo.textContent = "まだ日付が選択されていません。";
-    selectedNoteBox.innerHTML = `<span class="note-empty">メモはまだありません。</span>`;
-    return;
-  }
+      negativeCard.textContent = text;
+      negativeEffect.classList.add("show");
 
-  const key = formatDateKey(selectedDate);
-  const entries = loadEntries();
-
-  selectedDayInfo.textContent = `${selectedDate.getFullYear()}年 ${
-    selectedDate.getMonth() + 1
-  }月 ${selectedDate.getDate()}日`;
-
-  if (entries[key]) {
-    selectedNoteBox.textContent = entries[key].note || "（メモなし）";
-  } else {
-    selectedNoteBox.innerHTML = `<span class="note-empty">メモはまだありません。</span>`;
-  }
-}
-
-/* ===========================
-   モーダル
-=========================== */
-function openModal() {
-  modalBackdrop.classList.add("show");
-}
-
-function closeModal() {
-  modalBackdrop.classList.remove("show");
-}
-
-modalClose.addEventListener("click", closeModal);
-modalBackdrop.addEventListener("click", (e) => {
-  if (e.target === modalBackdrop) closeModal();
-});
-
-/* ===========================
-   気分ボタン
-=========================== */
-moodButtons.forEach((btn) => {
-  btn.addEventListener("click", () => {
-    if (btn.disabled) return;
-    moodButtons.forEach((b) => b.classList.remove("active"));
-    btn.classList.add("active");
-    selectedMood = btn.dataset.mood;
-  });
-});
-
-/* ===========================
-   メモ文字数
-=========================== */
-noteEl.addEventListener("input", () => {
-  charCount.textContent = `${noteEl.value.length} / 120`;
-});
-
-/* ===========================
-   保存（今日だけ）
-=========================== */
-saveBtn.addEventListener("click", () => {
-  if (!selectedDate || !selectedMood) return;
-
-  const key = formatDateKey(selectedDate);
-  const entries = loadEntries();
-
-  const moodLabels = {
-    bad: "しんどい",
-    meh: "ふつう",
-    good: "わりと良い",
-    great: "最高",
-  };
-
-  entries[key] = {
-    mood: selectedMood,
-    label: moodLabels[selectedMood],
-    note: noteEl.value,
-    createdAt: new Date().toISOString(),
-  };
-
-  saveEntries(entries);
-  closeModal();
-  renderCalendar();
-  updateSelectedDayDisplay();
-});
-
-/* ===========================
-   クリア
-=========================== */
-clearBtn.addEventListener("click", () => {
-  noteEl.value = "";
-  charCount.textContent = "0 / 120";
-});
-
-/* ===========================
-   月移動
-=========================== */
-document.getElementById("prev-month").addEventListener("click", () => {
-  currentDate.setMonth(currentDate.getMonth() - 1);
-  renderCalendar();
-});
-
-document.getElementById("next-month").addEventListener("click", () => {
-  currentDate.setMonth(currentDate.getMonth() + 1);
-  renderCalendar();
-});
-
-/* ===========================
-   使い方モーダル
-=========================== */
-helpBtn.addEventListener("click", () => {
-  helpBackdrop.classList.add("show");
-});
-
-helpClose.addEventListener("click", () => {
-  helpBackdrop.classList.remove("show");
-});
-
-helpBackdrop.addEventListener("click", (e) => {
-  if (e.target === helpBackdrop) helpBackdrop.classList.remove("show");
-});
-
-/* ===========================
-   グラフ描画
-=========================== */
-function renderGraph() {
-  const entries = loadEntries();
-  const today = new Date();
-
-  const days = [];
-  for (let i = 6; i >= 0; i--) {
-    const d = new Date(today);
-    d.setDate(today.getDate() - i);
-    days.push(d);
-  }
-
-  graphEl.innerHTML = "";
-  graphLabelsEl.innerHTML = "";
-
-  days.forEach((d) => {
-    const key = formatDateKey(d);
-    const bar = document.createElement("div");
-    bar.className = "graph-bar";
-
-    const inner = document.createElement("div");
-    inner.className = "graph-bar-inner";
-
-    if (entries[key]) {
-      const moodScore = { bad: 1, meh: 2, good: 3, great: 4 }[
-        entries[key].mood
-      ];
-      inner.style.setProperty("--bar-height", `${(moodScore / 4) * 100}%`);
-    } else {
-      inner.style.setProperty("--bar-height", "0%");
-    }
-
-    bar.appendChild(inner);
-    graphEl.appendChild(bar);
-
-    const label = document.createElement("div");
-    label.textContent = d.getDate();
-    graphLabelsEl.appendChild(label);
-  });
-}
-
-/* ===========================
-   嫌なこと（独立）
-=========================== */
-negativeInput.value = loadNegative();
-
-negativeInput.addEventListener("input", (e) => {
-  saveNegative(e.target.value);
-});
-
-/* 飛ばすエフェクト */
-negativeLaunchBtn.addEventListener("click", () => {
-  const text = negativeInput.value.trim();
-  if (!text) return;
-
-  negativeCard.textContent = text;
-  negativeEffect.classList.add("show");
-
-  setTimeout(() => {
-    negativeEffect.classList.remove("show");
-  }, 1400);
-});
-
-/* ===========================
-   初期化
-=========================== */
-function init() {
-  const today = new Date();
-  todayLabel.textContent = `${today.getMonth() + 1}月${today.getDate()}日`;
-
-  renderCalendar();
-  renderGraph();
-}
-
-init();
-</script>
-
-<!-- ▼ 嫌なことを飛ばすエフェクト（必ず script の上） -->
-<div id="negative-launch-effect" class="negative-launch-effect">
-  <div class="negative-card"></div>
-</div>
-
+      setTimeout(() => {
+        negativeEffect.classList.remove("show");
+      }, 1400);
+    });
+  </script>
 </body>
 </html>
