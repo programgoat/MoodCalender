@@ -2,179 +2,127 @@
 <html lang="ja">
 <head>
   <meta charset="UTF-8" />
-  <title>嫌なことを飛ばす（完全版）</title>
   <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>嫌なことを飛ばす（完全動作版）</title>
 
   <style>
     body {
       margin: 0;
-      min-height: 100vh;
+      height: 100vh;
       display: flex;
       align-items: center;
       justify-content: center;
-      background: #020617;
-      color: #e5e7eb;
-      font-family: system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
+      background: #0f172a;
+      color: #e2e8f0;
+      font-family: sans-serif;
     }
 
     .wrap {
-      width: 100%;
-      max-width: 480px;
+      width: 90%;
+      max-width: 420px;
       padding: 20px;
-      border-radius: 18px;
-      border: 1px solid rgba(148,163,184,0.4);
-      background: #020617;
-      box-shadow: 0 18px 45px rgba(0,0,0,0.7);
+      border-radius: 16px;
+      background: #1e293b;
+      border: 1px solid rgba(255,255,255,0.1);
     }
 
-    .card-title {
-      font-size: 16px;
-      font-weight: 600;
-      margin-bottom: 4px;
-    }
-
-    .card-subtitle {
-      font-size: 12px;
-      color: #9ca3af;
-      margin-bottom: 10px;
-    }
-
-    .negative-input {
+    textarea {
       width: 100%;
-      margin-top: 6px;
-      padding: 10px;
+      height: 80px;
       border-radius: 10px;
-      border: 1px solid rgba(148,163,184,0.35);
-      background: rgba(15,23,42,0.9);
-      color: #e5e7eb;
-      font-size: 12px;
+      border: 1px solid rgba(255,255,255,0.2);
+      background: #0f172a;
+      color: #e2e8f0;
+      padding: 10px;
+      font-size: 14px;
       resize: none;
-      min-height: 70px;
     }
 
-    .negative-actions {
+    button {
       margin-top: 10px;
-      display: flex;
-      justify-content: flex-end;
-    }
-
-    .btn-primary {
-      padding: 6px 12px;
+      padding: 8px 14px;
       border-radius: 999px;
-      border: 1px solid rgba(56,189,248,0.8);
-      background: rgba(56,189,248,0.15);
-      color: #e0f2fe;
-      font-size: 12px;
+      border: none;
+      background: #38bdf8;
+      color: #0f172a;
+      font-weight: bold;
       cursor: pointer;
-      transition: 0.18s;
+      transition: 0.2s;
     }
 
-    .btn-primary:hover {
+    button:hover {
       transform: scale(1.05);
-      background: rgba(56,189,248,0.25);
     }
 
     /* ===========================
-       飛ばすエフェクト（最前面）
+       飛ばすエフェクト（完全独立）
     ============================ */
-    .negative-launch-effect {
+    #launch-effect {
       position: fixed;
       inset: 0;
-      pointer-events: none;
       display: flex;
       align-items: center;
       justify-content: center;
+      pointer-events: none;
       opacity: 0;
-      transition: opacity 0.25s ease-out;
-      z-index: 999999 !important;
+      transition: opacity 0.2s ease-out;
+      z-index: 999999;
     }
 
-    .negative-launch-effect.show {
-      opacity: 1 !important;
+    #launch-effect.show {
+      opacity: 1;
     }
 
-    .negative-card {
+    .launch-card {
       padding: 14px 18px;
-      background: rgba(15,23,42,0.95);
-      border: 1px solid rgba(148,163,184,0.4);
+      background: #1e293b;
+      border: 1px solid rgba(255,255,255,0.2);
       border-radius: 14px;
-      color: #e5e7eb;
-      font-size: 13px;
+      color: #e2e8f0;
+      font-size: 14px;
       max-width: 260px;
       text-align: center;
-      box-shadow: 0 18px 45px rgba(15,23,42,0.9);
-      animation: launchUp 1.4s ease-out forwards;
+      animation: flyUp 1.4s ease-out forwards;
     }
 
-    @keyframes launchUp {
-      0% { transform: translateY(40px) scale(0.9); opacity: 0; }
-      20% { opacity: 1; }
+    @keyframes flyUp {
+      0%   { transform: translateY(40px) scale(1); opacity: 1; }
       100% { transform: translateY(-260px) scale(0.6); opacity: 0; }
     }
-    /* transform の上書きを完全に無効化 */
-.negative-card {
-  transform: none !important;
-}
-.negative-card {
-  animation: launchUp 1.4s ease-out forwards !important;
-}
-
   </style>
 </head>
 
 <body>
+
   <div class="wrap">
-    <div class="card-title">今日嫌だったこと</div>
-    <div class="card-subtitle">書いて飛ばすだけで少し軽くなる。</div>
-
-    <textarea id="negative-input" class="negative-input" maxlength="200"
-      placeholder="嫌だったことを書いてください…"></textarea>
-
-    <div class="negative-actions">
-      <button id="negative-launch-btn" class="btn-primary">
-        🚀 嫌なことを飛ばす
-      </button>
-    </div>
+    <h3>今日嫌だったこと</h3>
+    <textarea id="text"></textarea>
+    <button id="btn">🚀 嫌なことを飛ばす</button>
   </div>
 
-  <!-- ▼ エフェクト本体（必ず script の上） -->
-  <div id="negative-launch-effect" class="negative-launch-effect">
-    <div class="negative-card"></div>
+  <!-- エフェクト本体 -->
+  <div id="launch-effect">
+    <div class="launch-card"></div>
   </div>
 
   <script>
-    const negativeInput = document.getElementById("negative-input");
-    const negativeLaunchBtn = document.getElementById("negative-launch-btn");
-    const negativeEffect = document.getElementById("negative-launch-effect");
-    const negativeCard = negativeEffect.querySelector(".negative-card");
+    const text = document.getElementById("text");
+    const btn = document.getElementById("btn");
+    const effect = document.getElementById("launch-effect");
+    const card = effect.querySelector(".launch-card");
 
-    // 保存
-    function saveNegative(text) {
-      localStorage.setItem("negativeToday", text);
-    }
+    btn.addEventListener("click", () => {
+      const value = text.value.trim();
+      if (!value) return;
 
-    function loadNegative() {
-      return localStorage.getItem("negativeToday") || "";
-    }
-
-    negativeInput.value = loadNegative();
-
-    negativeInput.addEventListener("input", (e) => {
-      saveNegative(e.target.value);
-    });
-
-    // 飛ばすエフェクト
-    negativeLaunchBtn.addEventListener("click", () => {
-      const text = negativeInput.value.trim();
-      if (!text) return;
-
-      negativeCard.textContent = text;
-      negativeEffect.classList.add("show");
+      card.textContent = value;
+      effect.classList.add("show");
 
       setTimeout(() => {
-        negativeEffect.classList.remove("show");
+        effect.classList.remove("show");
       }, 1400);
     });
   </script>
+
 </body>
 </html>
