@@ -111,6 +111,14 @@
       20% { opacity: 1; }
       100% { transform: translateY(-260px) scale(0.6); opacity: 0; }
     }
+    /* transform の上書きを完全に無効化 */
+.negative-card {
+  transform: none !important;
+}
+.negative-card {
+  animation: launchUp 1.4s ease-out forwards !important;
+}
+
   </style>
 </head>
 
