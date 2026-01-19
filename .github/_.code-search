@@ -1,0 +1,28 @@
+# Query: メモ
+# ContextLines: 1
+
+6 件の結果 - 2 ファイル
+
+index.html:
+  24                <div class="title-text-sub">
+  25:                 カレンダーで、1日の気分と良かったことを残す。
+  26                </div>
+
+  45                <div class="card-subtitle">
+  46:                 日付をクリックして、その日の気分と良かったことを登録できます。
+  47                </div>
+
+script.js:
+  183      selectedDayInfo.textContent = "まだ日付が選択されていません。";
+  184:     selectedNoteBox.innerHTML = `<span class="note-empty">良かったことはまだありません。</span>`;
+  185      return;
+
+  195    if (entries[key]) {
+  196:     selectedNoteBox.textContent = entries[key].note || "（良かったことなし）";
+  197    } else {
+  198:     selectedNoteBox.innerHTML = `<span class="note-empty">良かったことはまだありません。</span>`;
+  199    }
+
+  229  /* ---------------------------
+  230:    良かったこと文字数
+  231  --------------------------- */

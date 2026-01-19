@@ -62,6 +62,10 @@ const analysisBtn = document.getElementById("analysis-btn");
 const analysisBackdrop = document.getElementById("analysis-backdrop");
 const analysisClose = document.getElementById("analysis-close");
 
+const badThingsEl = document.getElementById("bad-things");
+const blowAwayBtn = document.getElementById("blow-away-btn");
+const effectContainer = document.getElementById("effect-container");
+
 /* ---------------------------
    状態
 --------------------------- */
@@ -436,5 +440,228 @@ function renderMoodDistribution() {
     moodDistributionEl.appendChild(barDiv);
   });
 }
+
+/* ---------------------------
+   嫌なことを飛ばす
+--------------------------- */
+
+function destroyBadThings() {
+  if (!badThingsEl.value.trim()) {
+    alert("嫌なことを書いてから飛ばしてください！");
+    return;
+  }
+
+  // ランダムに3つの効果から1つを選ぶ
+  const effects = ["rocket", "blast", "shredder"];
+  const selectedEffect = effects[Math.floor(Math.random() * effects.length)];
+
+  // 画面を揺らす
+  document.body.classList.add("screen-shake");
+  
+  // ボタンとテキストエリアを無効化して視覚効果を追加
+  blowAwayBtn.disabled = true;
+  blowAwayBtn.classList.add("button-shake");
+  badThingsEl.classList.add("textarea-destroying");
+  badThingsEl.disabled = true;
+
+  // フラッシュエフェクト
+  const flash = document.createElement("div");
+  flash.className = "flash-overlay";
+  effectContainer.appendChild(flash);
+
+  // テキストエリアの位置情報を取得
+  const rect = badThingsEl.getBoundingClientRect();
+  const centerX = rect.left + rect.width / 2;
+  const centerY = rect.top + rect.height / 2;
+
+  if (selectedEffect === "rocket") {
+    createRocketEffect(centerX, centerY);
+  } else if (selectedEffect === "blast") {
+    createBlastEffect(centerX, centerY);
+  } else if (selectedEffect === "shredder") {
+    createShredderEffect(centerX, centerY);
+  }
+
+  // 1.5秒後にリセット
+  setTimeout(() => {
+    badThingsEl.value = "";
+    blowAwayBtn.classList.remove("button-shake");
+    badThingsEl.classList.remove("textarea-destroying");
+    document.body.classList.remove("screen-shake");
+    blowAwayBtn.disabled = false;
+    badThingsEl.disabled = false;
+    effectContainer.innerHTML = "";
+  }, 1500);
+}
+
+function createRocketEffect(centerX, centerY) {
+  // 複数のロケット
+  const rocketCount = 5;
+  for (let i = 0; i < rocketCount; i++) {
+    const rocket = document.createElement("div");
+    rocket.className = "rocket-effect";
+    rocket.textContent = "🚀";
+    const offsetX = (Math.random() - 0.5) * 150;
+    rocket.style.left = (centerX + offsetX) + "px";
+    rocket.style.top = centerY + "px";
+    rocket.style.animationDelay = i * 0.08 + "s";
+    effectContainer.appendChild(rocket);
+
+    // 各ロケットの爆発エフェクト
+    const explosion = document.createElement("div");
+    explosion.className = "explosion";
+    explosion.style.left = (centerX + offsetX - 150) + "px";
+    explosion.style.top = (centerY - 800) + "px";
+    explosion.style.background = "radial-gradient(circle, rgba(255, 200, 0, 0.7), rgba(255, 100, 0, 0.4), rgba(255, 50, 0, 0.2))";
+    explosion.style.animationDelay = (0.35 + i * 0.08) + "s";
+    effectContainer.appendChild(explosion);
+  }
+
+  // 大量の炎パーティクル
+  for (let i = 0; i < 60; i++) {
+    const particle = document.createElement("div");
+    particle.className = "particle fire";
+    const angle = (Math.PI * 2 * i) / 60;
+    const velocity = 250 + Math.random() * 200;
+    particle.style.left = centerX + "px";
+    particle.style.top = centerY + "px";
+    const size = 10 + Math.random() * 25;
+    particle.style.width = size + "px";
+    particle.style.height = size + "px";
+    particle.style.animation = "blastFly 1.5s ease-out forwards";
+    particle.style.setProperty("--tx", Math.cos(angle) * velocity + "px");
+    particle.style.setProperty("--ty", Math.sin(angle) * velocity - 600 + "px");
+    if (Math.random() > 0.7) {
+      particle.classList.add("particle-big");
+    }
+    effectContainer.appendChild(particle);
+  }
+
+  // 追加の爆発テキスト
+  for (let i = 0; i < 3; i++) {
+    const boom = document.createElement("div");
+    boom.style.position = "fixed";
+    boom.style.fontSize = (100 - i * 20) + "px";
+    boom.style.fontWeight = "bold";
+    boom.style.color = "rgba(255, 200, 0, " + (0.8 - i * 0.2) + ")";
+    boom.style.textShadow = "0 0 40px rgba(255, 200, 0, 0.9)";
+    boom.style.transform = `translate(-50%, -50%) rotate(${Math.random() * 60 - 30}deg)`;
+    boom.style.left = (centerX + (Math.random() - 0.5) * 200) + "px";
+    boom.style.top = (centerY + (Math.random() - 0.5) * 150) + "px";
+    boom.style.animation = "blastFly 1.5s ease-out forwards";
+    boom.style.setProperty("--tx", (Math.random() - 0.5) * 400 + "px");
+    boom.style.setProperty("--ty", -600 + "px");
+    boom.textContent = "💥";
+    boom.style.pointerEvents = "none";
+    effectContainer.appendChild(boom);
+  }
+}
+
+function createBlastEffect(centerX, centerY) {
+  // 複数の衝撃波
+  for (let w = 0; w < 3; w++) {
+    const shockwave = document.createElement("div");
+    shockwave.className = "shockwave";
+    shockwave.style.left = (centerX - 40) + "px";
+    shockwave.style.top = (centerY - 40) + "px";
+    shockwave.style.animationDelay = (w * 0.15) + "s";
+    effectContainer.appendChild(shockwave);
+  }
+
+  // 爆発テキスト（大量）
+  for (let t = 0; t < 5; t++) {
+    const blastText = document.createElement("div");
+    blastText.style.position = "fixed";
+    blastText.style.left = (centerX + (Math.random() - 0.5) * 200) + "px";
+    blastText.style.top = (centerY + (Math.random() - 0.5) * 200) + "px";
+    blastText.style.fontSize = (60 + Math.random() * 60) + "px";
+    blastText.style.fontWeight = "bold";
+    blastText.style.color = "rgba(255, 150, 0, 0.9)";
+    blastText.style.textShadow = "0 0 50px rgba(255, 150, 0, 0.8)";
+    blastText.style.transform = "translate(-50%, -50%)";
+    blastText.style.animation = "blastFly 1.5s ease-out forwards";
+    const angle = (Math.PI * 2 * t) / 5;
+    blastText.style.setProperty("--tx", Math.cos(angle) * 400 + "px");
+    blastText.style.setProperty("--ty", Math.sin(angle) * 400 - 300 + "px");
+    blastText.textContent = "💥";
+    blastText.style.pointerEvents = "none";
+    effectContainer.appendChild(blastText);
+  }
+
+  // 大量の破片パーティクル
+  for (let i = 0; i < 80; i++) {
+    const particle = document.createElement("div");
+    particle.className = "particle debris";
+    const angle = (Math.PI * 2 * i) / 80;
+    const velocity = 300 + Math.random() * 200;
+    particle.style.left = centerX + "px";
+    particle.style.top = centerY + "px";
+    const size = 8 + Math.random() * 20;
+    particle.style.width = size + "px";
+    particle.style.height = size + "px";
+    particle.style.animation = "blastFly 1.5s ease-out forwards";
+    particle.style.setProperty("--tx", Math.cos(angle) * velocity + "px");
+    particle.style.setProperty("--ty", Math.sin(angle) * velocity - 200 + "px");
+    if (Math.random() > 0.6) {
+      particle.classList.add("particle-big");
+    }
+    effectContainer.appendChild(particle);
+  }
+}
+
+function createShredderEffect(centerX, centerY) {
+  // シュレッダー刃（複数）
+  for (let s = 0; s < 3; s++) {
+    const shredder = document.createElement("div");
+    shredder.className = "shredder-effect";
+    shredder.style.left = (centerX + (s - 1) * 80) + "px";
+    shredder.style.top = centerY + "px";
+    shredder.style.fontSize = "120px";
+    shredder.style.transform = "translate(-50%, -50%)";
+    shredder.style.animationDelay = (s * 0.1) + "s";
+    shredder.textContent = s % 2 === 0 ? "🔪" : "✂️";
+    effectContainer.appendChild(shredder);
+  }
+
+  // 粉砕テキスト
+  for (let t = 0; t < 4; t++) {
+    const slash = document.createElement("div");
+    slash.style.position = "fixed";
+    slash.style.left = (centerX + (Math.random() - 0.5) * 250) + "px";
+    slash.style.top = (centerY + (Math.random() - 0.5) * 200) + "px";
+    slash.style.fontSize = (80 + Math.random() * 60) + "px";
+    slash.style.animation = "shredderCut 1.5s ease-in forwards";
+    slash.style.transform = "translate(-50%, -50%)";
+    slash.style.animationDelay = (t * 0.1) + "s";
+    slash.textContent = Math.random() > 0.5 ? "✂️" : "🔪";
+    slash.style.pointerEvents = "none";
+    effectContainer.appendChild(slash);
+  }
+
+  // 大量の細切れパーティクル
+  for (let i = 0; i < 100; i++) {
+    const particle = document.createElement("div");
+    particle.className = "shred-particle";
+    const angle = (Math.PI * 2 * i) / 100;
+    const velocity = 280 + Math.random() * 220;
+    particle.style.left = centerX + "px";
+    particle.style.top = centerY + "px";
+    const size = 4 + Math.random() * 12;
+    particle.style.width = size + "px";
+    particle.style.height = size + "px";
+    particle.style.background = ["linear-gradient(135deg, #f97373, #fc8585)", "linear-gradient(45deg, #ff6b6b, #ff8787)", "radial-gradient(circle, #ff5252, #ff1744)"][Math.floor(Math.random() * 3)];
+    particle.style.borderRadius = "50%";
+    particle.style.boxShadow = `0 0 ${10 + Math.random() * 15}px rgba(249, 115, 115, 0.8)`;
+    particle.style.setProperty("--tx", Math.cos(angle) * velocity + "px");
+    particle.style.setProperty("--ty", Math.sin(angle) * velocity - 400 + "px");
+    particle.style.setProperty("--rotate", Math.random() * 1080 + "deg");
+    if (Math.random() > 0.7) {
+      particle.classList.add("particle-big");
+    }
+    effectContainer.appendChild(particle);
+  }
+}
+
+blowAwayBtn.addEventListener("click", destroyBadThings);
 
 init();

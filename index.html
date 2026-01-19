@@ -22,7 +22,7 @@
                 <span class="title-pill">v3</span>
               </div>
               <div class="title-text-sub">
-                カレンダーで、1日の気分とひとことメモを残す。
+                カレンダーで、1日の気分と良かったことを記録しよう。良かったことはカレンダーに、悪いことは消し去ってカタルシスを得よう！
               </div>
             </div>
           </div>
@@ -109,6 +109,22 @@
           <div class="note-box" id="selected-note-box">
             <span class="note-empty">良かったことはまだありません。</span>
           </div>
+        </section>
+
+        <section class="card">
+          <div class="card-header">
+            <div>
+              <div class="card-title">嫌なことを飛ばす</div>
+              <div class="card-subtitle">
+                今日の嫌なことを書いて、カタルシスを得よう。
+              </div>
+            </div>
+          </div>
+
+          <textarea id="bad-things" placeholder="嫌なことを書いてください..." maxlength="200"></textarea>
+          <button id="blow-away-btn" class="blow-away-btn">
+            <span>💨</span> 嫌なことを飛ばす
+          </button>
         </section>
 
         <button id="analysis-btn" class="analysis-btn">分析</button>
@@ -201,6 +217,9 @@
     </div>
   </div>
   <!-- ▲▲▲ モーダル：分析 ▲▲▲ -->
+
+  <!-- エフェクト用コンテナ -->
+  <div id="effect-container"></div>
 
   <script src="script.js"></script>
 </body>
