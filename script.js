@@ -697,6 +697,25 @@ const THEMES = [
   }
 ];
 
+// 写実的な写真素材（Unsplash）を背景として利用する
+// クエリに w=800 を指定し負荷と帯域を抑制。必要に応じてブラウザが縮小表示
+const THEME_PHOTOS = {
+  light:
+    "https://images.unsplash.com/photo-1500530855697-b586d89ba3ee?w=800&auto=format&fit=crop&q=75",
+  midnight:
+    // 深夜の夜景（森でなくても可）※暗めトーン
+    "https://images.unsplash.com/photo-1448375240586-882707db888b?w=800&auto=format&fit=crop&q=75",
+  crystal:
+    // ガラスの結晶（クリスタル質感）
+    "https://images.unsplash.com/photo-1471879832106-c7ab9e0cee23?w=800&auto=format&fit=crop&q=75",
+  future:
+    // サイバネティックな未来都市（ネオン高層）
+    "https://images.unsplash.com/photo-1496307042754-b4aa456c4a2d?w=800&auto=format&fit=crop&q=75",
+  ruin:
+    // アステカ風の遺跡
+    "https://images.unsplash.com/photo-1508264165352-258859e62245?w=800&auto=format&fit=crop&q=75"
+};
+
 function initThemeSystem() {
   const themeBtn = document.getElementById("theme-btn");
   const themeBackdrop = document.getElementById("theme-backdrop");
@@ -715,8 +734,14 @@ function initThemeSystem() {
       preview.classList.add("selected");
     }
 
+    const photoUrl = THEME_PHOTOS[theme.id];
     preview.innerHTML = `
       <div class="theme-preview-content" style="background: linear-gradient(135deg, ${theme.colors[0]} 0%, ${theme.colors[1]} 100%);">
+        ${
+          photoUrl
+            ? `<div class="theme-preview-photo" style="background-image:url('${photoUrl}');"></div>`
+            : ""
+        }
         <div class="theme-preview-illustration theme-ill-${theme.id}">
           ${getThemeIllustrationSVG(theme.id)}
         </div>
@@ -770,6 +795,16 @@ function applyTheme(themeId) {
   // CSS側は :root[data-theme] と body[data-theme] の両方を参照しているため、両方に付与する
   document.documentElement.setAttribute("data-theme", themeId);
   document.body.setAttribute("data-theme", themeId);
+
+  // プレビューで使用している写真を、実際のテーマ背景にも適用
+  const photoUrl = THEME_PHOTOS[themeId];
+  if (photoUrl) {
+    document.documentElement.style.setProperty("--theme-photo", `url("${photoUrl}")`);
+    document.documentElement.style.setProperty("--theme-photo-opacity", "0.42");
+  } else {
+    document.documentElement.style.setProperty("--theme-photo", "none");
+    document.documentElement.style.setProperty("--theme-photo-opacity", "0");
+  }
 }
 
 initThemeSystem();
@@ -778,22 +813,21 @@ initThemeSystem();
    テーマプレビュー用：イラスト（SVG）
 --------------------------- */
 function getThemeIllustrationSVG(themeId) {
-  // NOTE: 外部画像を使わず、軽量なインラインSVGで描画する
+  // NOTE: 外部画像を使わず、写実寄りに作り込んだインラインSVGで描画する
   switch (themeId) {
     case "light":
-      // 雲・朝の光・鳥（一般的な現代の朝）
       return `
         <svg viewBox="0 0 300 180" xmlns="http://www.w3.org/2000/svg" aria-hidden="true">
           <defs>
             <linearGradient id="sky" x1="0" y1="0" x2="0" y2="1">
-              <stop offset="0%" stop-color="#eaf6ff" />
-              <stop offset="60%" stop-color="#fff4d6" />
-              <stop offset="100%" stop-color="#ffffff" />
+              <stop offset="0%" stop-color="#d9ecff" />
+              <stop offset="45%" stop-color="#f1f7ff" />
+              <stop offset="100%" stop-color="#fff7df" />
             </linearGradient>
             <radialGradient id="sun" cx="35%" cy="35%" r="60%">
-              <stop offset="0%" stop-color="#ffd86b" stop-opacity="0.95"/>
-              <stop offset="55%" stop-color="#ffb23e" stop-opacity="0.55"/>
-              <stop offset="100%" stop-color="#ff8a00" stop-opacity="0.08"/>
+              <stop offset="0%" stop-color="#ffe59a" stop-opacity="0.95"/>
+              <stop offset="40%" stop-color="#ffc766" stop-opacity="0.65"/>
+              <stop offset="100%" stop-color="#ff9d00" stop-opacity="0.12"/>
             </radialGradient>
             <filter id="cloudBlur" x="-20%" y="-20%" width="140%" height="140%">
               <feGaussianBlur stdDeviation="3"/>
@@ -801,7 +835,6 @@ function getThemeIllustrationSVG(themeId) {
           </defs>
           <rect width="300" height="180" fill="url(#sky)"/>
           <circle cx="75" cy="55" r="48" fill="url(#sun)"/>
-          <!-- sun rays -->
           <g stroke="#ffd86b" stroke-opacity="0.55" stroke-width="3" stroke-linecap="round">
             <path d="M75 5 L75 18"/>
             <path d="M35 55 L48 55"/>
@@ -809,20 +842,19 @@ function getThemeIllustrationSVG(themeId) {
             <path d="M48 23 L57 32"/>
             <path d="M102 86 L93 78"/>
           </g>
-          <!-- clouds -->
           <g filter="url(#cloudBlur)" opacity="0.85">
             <g fill="#ffffff">
-              <ellipse cx="165" cy="64" rx="52" ry="22"/>
-              <ellipse cx="130" cy="70" rx="36" ry="18"/>
-              <ellipse cx="200" cy="72" rx="46" ry="20"/>
-              <ellipse cx="240" cy="98" rx="54" ry="24"/>
-              <ellipse cx="210" cy="104" rx="38" ry="18"/>
-              <ellipse cx="270" cy="106" rx="40" ry="18"/>
+              <ellipse cx="165" cy="64" rx="56" ry="22"/>
+              <ellipse cx="130" cy="70" rx="40" ry="18"/>
+              <ellipse cx="200" cy="72" rx="52" ry="20"/>
+              <ellipse cx="240" cy="98" rx="60" ry="24"/>
+              <ellipse cx="210" cy="104" rx="44" ry="18"/>
+              <ellipse cx="270" cy="106" rx="44" ry="18"/>
+              <ellipse cx="95" cy="92" rx="40" ry="18" fill="#f4f9ff" opacity="0.9"/>
             </g>
           </g>
-          <!-- horizon glow -->
-          <rect y="120" width="300" height="60" fill="#fff0c2" opacity="0.35"/>
-          <!-- birds -->
+          <path d="M0 128 Q50 110 110 120 Q180 134 240 122 Q275 116 300 126 L300 180 L0 180 Z" fill="#d7e5cc" opacity="0.7"/>
+          <rect y="128" width="300" height="52" fill="#f7f1dd" opacity="0.35"/>
           <g fill="none" stroke="#1f2937" stroke-opacity="0.55" stroke-width="2" stroke-linecap="round">
             <path d="M210 48 q10 -8 20 0"/>
             <path d="M230 48 q10 -8 20 0"/>
@@ -832,7 +864,6 @@ function getThemeIllustrationSVG(themeId) {
         </svg>
       `;
     case "midnight":
-      // 深夜の森＋海（波）＋月
       return `
         <svg viewBox="0 0 300 180" xmlns="http://www.w3.org/2000/svg" aria-hidden="true">
           <defs>
@@ -842,7 +873,8 @@ function getThemeIllustrationSVG(themeId) {
               <stop offset="100%" stop-color="#020617"/>
             </linearGradient>
             <radialGradient id="moon" cx="70%" cy="30%" r="55%">
-              <stop offset="0%" stop-color="#ffffff" stop-opacity="0.35"/>
+              <stop offset="0%" stop-color="#fefefe" stop-opacity="0.6"/>
+              <stop offset="45%" stop-color="#fefefe" stop-opacity="0.28"/>
               <stop offset="70%" stop-color="#ffffff" stop-opacity="0.12"/>
               <stop offset="100%" stop-color="#ffffff" stop-opacity="0"/>
             </radialGradient>
@@ -850,15 +882,16 @@ function getThemeIllustrationSVG(themeId) {
               <stop offset="0%" stop-color="#062042" stop-opacity="0.9"/>
               <stop offset="100%" stop-color="#020617" stop-opacity="1"/>
             </linearGradient>
+            <filter id="mGlow" x="-20%" y="-20%" width="140%" height="140%">
+              <feGaussianBlur stdDeviation="1.2"/>
+            </filter>
           </defs>
           <rect width="300" height="180" fill="url(#night)"/>
-          <circle cx="220" cy="50" r="55" fill="url(#moon)"/>
-          <!-- stars -->
+          <circle cx="220" cy="50" r="48" fill="url(#moon)" filter="url(#mGlow)"/>
           <g fill="#c7f0ff" opacity="0.65">
             <circle cx="40" cy="30" r="1.5"/><circle cx="70" cy="18" r="1.2"/><circle cx="120" cy="40" r="1.3"/>
             <circle cx="160" cy="20" r="1.1"/><circle cx="260" cy="26" r="1.2"/><circle cx="200" cy="18" r="1.1"/>
           </g>
-          <!-- forest silhouettes -->
           <g fill="#03101e" opacity="0.9">
             <path d="M0 120 L20 78 L40 120 Z"/>
             <path d="M30 120 L55 70 L80 120 Z"/>
@@ -868,9 +901,12 @@ function getThemeIllustrationSVG(themeId) {
             <path d="M195 120 L225 72 L255 120 Z"/>
             <path d="M240 120 L265 85 L290 120 Z"/>
           </g>
-          <!-- sea -->
+          <g fill="#041725" opacity="0.95">
+            <path d="M18 132 L38 92 L58 132 Z"/>
+            <path d="M92 132 L112 94 L132 132 Z"/>
+            <path d="M182 132 L202 94 L222 132 Z"/>
+          </g>
           <rect y="118" width="300" height="62" fill="url(#sea)"/>
-          <!-- waves -->
           <g fill="none" stroke="#38bdf8" stroke-opacity="0.25" stroke-width="2">
             <path d="M0 140 C30 130, 60 150, 90 140 S150 130, 180 140 S240 150, 300 140"/>
             <path d="M0 158 C35 150, 70 166, 105 158 S175 150, 210 158 S260 168, 300 158"/>
@@ -878,7 +914,6 @@ function getThemeIllustrationSVG(themeId) {
         </svg>
       `;
     case "crystal":
-      // 中央に大きいガラス結晶
       return `
         <svg viewBox="0 0 300 180" xmlns="http://www.w3.org/2000/svg" aria-hidden="true">
           <defs>
@@ -894,6 +929,10 @@ function getThemeIllustrationSVG(themeId) {
               <stop offset="0%" stop-color="#a78bfa" stop-opacity="0.5"/>
               <stop offset="100%" stop-color="#9f7aea" stop-opacity="0.18"/>
             </linearGradient>
+            <linearGradient id="facet3" x1="0" y1="0" x2="0" y2="1">
+              <stop offset="0%" stop-color="#d8ccff" stop-opacity="0.45"/>
+              <stop offset="100%" stop-color="#9f7aea" stop-opacity="0.18"/>
+            </linearGradient>
             <filter id="glow" x="-30%" y="-30%" width="160%" height="160%">
               <feGaussianBlur stdDeviation="6" result="b"/>
               <feMerge>
@@ -903,17 +942,17 @@ function getThemeIllustrationSVG(themeId) {
             </filter>
           </defs>
           <rect width="300" height="180" fill="url(#crBg)"/>
-          <circle cx="150" cy="90" r="70" fill="#a78bfa" opacity="0.12"/>
-          <!-- big crystal -->
+          <circle cx="150" cy="90" r="82" fill="#a78bfa" opacity="0.1"/>
+          <ellipse cx="150" cy="150" rx="95" ry="18" fill="#6b5bb6" opacity="0.18"/>
           <g filter="url(#glow)">
             <polygon points="150,18 200,60 182,140 150,168 118,140 100,60" fill="url(#facet1)" stroke="#c4b5fd" stroke-opacity="0.55"/>
-            <polygon points="150,18 182,140 150,168" fill="url(#facet2)" opacity="0.9"/>
-            <polygon points="150,18 118,140 150,168" fill="#e9d5ff" opacity="0.12"/>
+            <polygon points="150,18 182,140 150,168" fill="url(#facet2)" opacity="0.92"/>
+            <polygon points="150,18 118,140 150,168" fill="url(#facet3)" opacity="0.8"/>
+            <polygon points="150,60 175,120 150,140 125,120" fill="#dcd6ff" opacity="0.2"/>
             <polyline points="150,18 150,168" stroke="#e9d5ff" stroke-opacity="0.35" stroke-width="2"/>
             <polyline points="100,60 200,60" stroke="#e9d5ff" stroke-opacity="0.22" stroke-width="2"/>
             <polyline points="118,140 182,140" stroke="#e9d5ff" stroke-opacity="0.18" stroke-width="2"/>
           </g>
-          <!-- sparkles -->
           <g fill="#ffffff" opacity="0.55">
             <path d="M40 40 l4 10 l-4 10 l-4-10z"/>
             <path d="M255 55 l3 7 l-3 7 l-3-7z"/>
@@ -922,7 +961,6 @@ function getThemeIllustrationSVG(themeId) {
         </svg>
       `;
     case "future":
-      // サイバネティックな都会、ネオン
       return `
         <svg viewBox="0 0 300 180" xmlns="http://www.w3.org/2000/svg" aria-hidden="true">
           <defs>
@@ -938,35 +976,38 @@ function getThemeIllustrationSVG(themeId) {
             <filter id="ng" x="-30%" y="-30%" width="160%" height="160%">
               <feGaussianBlur stdDeviation="2.5"/>
             </filter>
+            <linearGradient id="skyglow" x1="0" y1="0" x2="0" y2="1">
+              <stop offset="0%" stop-color="#00ffcc" stop-opacity="0.18"/>
+              <stop offset="100%" stop-color="#00ff88" stop-opacity="0"/>
+            </linearGradient>
           </defs>
           <rect width="300" height="180" fill="url(#fBg)"/>
-          <!-- neon grid -->
+          <rect width="300" height="60" fill="url(#skyglow)"/>
           <g stroke="#00ff88" stroke-opacity="0.10" stroke-width="1">
             <path d="M0 30 H300"/><path d="M0 60 H300"/><path d="M0 90 H300"/><path d="M0 120 H300"/><path d="M0 150 H300"/>
             <path d="M30 0 V180"/><path d="M60 0 V180"/><path d="M90 0 V180"/><path d="M120 0 V180"/><path d="M150 0 V180"/><path d="M180 0 V180"/><path d="M210 0 V180"/><path d="M240 0 V180"/><path d="M270 0 V180"/>
           </g>
-          <!-- skyline -->
           <g>
-            <rect x="20" y="88" width="46" height="92" fill="url(#neon)" stroke="#00ff88" stroke-opacity="0.35"/>
-            <rect x="76" y="70" width="58" height="110" fill="url(#neon)" stroke="#00ff88" stroke-opacity="0.35"/>
-            <rect x="142" y="96" width="52" height="84" fill="url(#neon)" stroke="#00ff88" stroke-opacity="0.35"/>
-            <rect x="202" y="62" width="36" height="118" fill="url(#neon)" stroke="#00ff88" stroke-opacity="0.35"/>
-            <rect x="244" y="84" width="40" height="96" fill="url(#neon)" stroke="#00ff88" stroke-opacity="0.35"/>
-            <!-- windows -->
-            <g fill="#00ffff" opacity="0.35" filter="url(#ng)">
-              <rect x="28" y="98" width="6" height="10"/><rect x="40" y="98" width="6" height="10"/><rect x="28" y="116" width="6" height="10"/><rect x="40" y="116" width="6" height="10"/>
-              <rect x="86" y="82" width="7" height="11"/><rect x="102" y="82" width="7" height="11"/><rect x="118" y="82" width="7" height="11"/>
-              <rect x="86" y="104" width="7" height="11"/><rect x="102" y="104" width="7" height="11"/><rect x="118" y="104" width="7" height="11"/>
-              <rect x="210" y="74" width="6" height="10"/><rect x="222" y="74" width="6" height="10"/><rect x="210" y="92" width="6" height="10"/><rect x="222" y="92" width="6" height="10"/>
-            </g>
+            <rect x="20" y="78" width="46" height="102" fill="url(#neon)" stroke="#00ff88" stroke-opacity="0.35"/>
+            <rect x="76" y="60" width="58" height="120" fill="url(#neon)" stroke="#00ff88" stroke-opacity="0.35"/>
+            <rect x="142" y="90" width="52" height="90" fill="url(#neon)" stroke="#00ff88" stroke-opacity="0.35"/>
+            <rect x="202" y="52" width="36" height="128" fill="url(#neon)" stroke="#00ff88" stroke-opacity="0.35"/>
+            <rect x="244" y="78" width="40" height="102" fill="url(#neon)" stroke="#00ff88" stroke-opacity="0.35"/>
+            <rect x="0" y="96" width="32" height="84" fill="#052036" opacity="0.6"/>
+            <rect x="120" y="72" width="22" height="108" fill="#04192b" opacity="0.65"/>
           </g>
-          <!-- neon haze -->
+          <g fill="#00ffff" opacity="0.35" filter="url(#ng)">
+            <rect x="28" y="98" width="6" height="10"/><rect x="40" y="98" width="6" height="10"/><rect x="28" y="116" width="6" height="10"/><rect x="40" y="116" width="6" height="10"/>
+            <rect x="86" y="82" width="7" height="11"/><rect x="102" y="82" width="7" height="11"/><rect x="118" y="82" width="7" height="11"/>
+            <rect x="86" y="104" width="7" height="11"/><rect x="102" y="104" width="7" height="11"/><rect x="118" y="104" width="7" height="11"/>
+            <rect x="210" y="74" width="6" height="10"/><rect x="222" y="74" width="6" height="10"/><rect x="210" y="92" width="6" height="10"/><rect x="222" y="92" width="6" height="10"/>
+          </g>
           <circle cx="70" cy="50" r="42" fill="#00ffff" opacity="0.10" filter="url(#ng)"/>
-          <circle cx="240" cy="40" r="55" fill="#00ff88" opacity="0.08" filter="url(#ng)"/>
+          <circle cx="240" cy="40" r="55" fill="#00ff88" opacity="0.10" filter="url(#ng)"/>
+          <circle cx="150" cy="30" r="38" fill="#00aaff" opacity="0.08" filter="url(#ng)"/>
         </svg>
       `;
     case "ruin":
-      // アステカ風の遺跡（段ピラミッド）
       return `
         <svg viewBox="0 0 300 180" xmlns="http://www.w3.org/2000/svg" aria-hidden="true">
           <defs>
@@ -979,30 +1020,33 @@ function getThemeIllustrationSVG(themeId) {
               <stop offset="0%" stop-color="#d4a574" stop-opacity="0.55"/>
               <stop offset="100%" stop-color="#b8855a" stop-opacity="0.28"/>
             </linearGradient>
+            <linearGradient id="dust" x1="0" y1="0" x2="0" y2="1">
+              <stop offset="0%" stop-color="#a26f39" stop-opacity="0.18"/>
+              <stop offset="100%" stop-color="#2a1810" stop-opacity="0"/>
+            </linearGradient>
           </defs>
           <rect width="300" height="180" fill="url(#rBg)"/>
-          <!-- sun/dust -->
-          <circle cx="250" cy="35" r="34" fill="#d4a574" opacity="0.12"/>
-          <!-- step pyramid -->
+          <rect width="300" height="70" fill="url(#dust)"/>
+          <circle cx="250" cy="35" r="34" fill="#d4a574" opacity="0.18"/>
           <g fill="url(#stone)" stroke="#d4a574" stroke-opacity="0.35">
             <rect x="70" y="120" width="160" height="40" rx="2"/>
             <rect x="90" y="100" width="120" height="30" rx="2"/>
             <rect x="110" y="82" width="80" height="24" rx="2"/>
             <rect x="130" y="66" width="40" height="20" rx="2"/>
           </g>
-          <!-- stone pattern lines -->
+          <g stroke="#8c6236" stroke-width="3" stroke-linecap="round" opacity="0.6">
+            <path d="M150 66 V160"/>
+          </g>
           <g stroke="#2a1810" stroke-opacity="0.35" stroke-width="2">
             <path d="M70 132 H230"/>
             <path d="M90 112 H210"/>
             <path d="M110 94 H190"/>
             <path d="M130 76 H170"/>
           </g>
-          <!-- vines -->
           <g fill="none" stroke="#2f5d3a" stroke-opacity="0.45" stroke-width="2" stroke-linecap="round">
             <path d="M78 120 C68 110, 74 100, 82 92"/>
             <path d="M220 120 C232 112, 232 98, 220 90"/>
           </g>
-          <!-- foreground stones -->
           <g fill="#c9935e" opacity="0.22">
             <rect x="18" y="146" width="26" height="18" rx="2"/>
             <rect x="255" y="150" width="20" height="14" rx="2"/>

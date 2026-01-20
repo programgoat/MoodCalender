@@ -17,6 +17,9 @@
   --radius-md: 10px;
   --shadow-soft: 0 18px 45px rgba(15, 23, 42, 0.9);
   --transition-fast: 0.18s ease-out;
+  /* 写真背景 */
+  --theme-photo: none;
+  --theme-photo-opacity: 0;
 }
 
 * {
@@ -116,6 +119,22 @@ body[data-theme="crystal"] .app {
     radial-gradient(circle at 100% 0%, rgba(129, 140, 248, 0.18) 0, transparent 55%);
   opacity: 0.7;
   pointer-events: none;
+  z-index: 0;
+}
+
+/* 写真背景を重ねるレイヤー */
+.app::after {
+  content: "";
+  position: absolute;
+  inset: 0;
+  background-image: var(--theme-photo);
+  background-size: cover;
+  background-position: center;
+  opacity: var(--theme-photo-opacity);
+  mix-blend-mode: multiply;
+  transition: opacity 0.3s ease, background-image 0.3s ease;
+  pointer-events: none;
+  z-index: 0;
 }
 
 .app-inner {
@@ -1726,6 +1745,15 @@ body {
   z-index: 0;
   opacity: 0.95;
   pointer-events: none;
+}
+
+.theme-preview-photo {
+  position: absolute;
+  inset: 0;
+  background-size: cover;
+  background-position: center;
+  filter: saturate(1.05) brightness(0.95);
+  z-index: 0;
 }
 
 .theme-preview-illustration svg {
