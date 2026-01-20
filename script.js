@@ -665,3 +665,105 @@ function createShredderEffect(centerX, centerY) {
 blowAwayBtn.addEventListener("click", destroyBadThings);
 
 init();
+/* ===========================
+   テーマシステム
+=========================== */
+
+const THEMES = [
+  {
+    id: "light",
+    name: "Light",
+    colors: ["#f8fafc", "#e2e8f0", "#0369a1", "#0284c7"]
+  },
+  {
+    id: "midnight",
+    name: "MidNight",
+    colors: ["#0f172a", "#020617", "#38bdf8", "#0ea5e9"]
+  },
+  {
+    id: "future",
+    name: "Future",
+    colors: ["#0a0e27", "#080b1a", "#00ff88", "#00dd77"]
+  },
+  {
+    id: "ruin",
+    name: "Ruin",
+    colors: ["#3d2817", "#2a1810", "#d4a574", "#c9935e"]
+  },
+  {
+    id: "crystal",
+    name: "Crystal",
+    colors: ["#0f1419", "#0a0d12", "#a78bfa", "#9f7aea"]
+  }
+];
+
+function initThemeSystem() {
+  const themeBtn = document.getElementById("theme-btn");
+  const themeBackdrop = document.getElementById("theme-backdrop");
+  const themeClose = document.getElementById("theme-close");
+  const themePreviewGrid = document.getElementById("theme-preview-grid");
+
+  // 保存されたテーマを読み込む
+  const savedTheme = localStorage.getItem("moodTheme") || "midnight";
+  applyTheme(savedTheme);
+
+  // テーマプレビューグリッドを生成
+  THEMES.forEach((theme) => {
+    const preview = document.createElement("div");
+    preview.className = "theme-preview";
+    if (theme.id === savedTheme) {
+      preview.classList.add("selected");
+    }
+
+    preview.innerHTML = `
+      <div class="theme-preview-content" style="background: linear-gradient(135deg, ${theme.colors[0]} 0%, ${theme.colors[1]} 100%);">
+        <div class="theme-preview-name" style="color: ${theme.id === "light" ? "#1e293b" : "#e5e7eb"};">
+          ${theme.name}
+        </div>
+        <div class="theme-preview-colors">
+          ${theme.colors
+            .map(
+              (color) => `
+            <div class="theme-preview-color-swatch" style="background-color: ${color};"></div>
+          `
+            )
+            .join("")}
+        </div>
+      </div>
+    `;
+
+    preview.addEventListener("click", () => {
+      applyTheme(theme.id);
+      localStorage.setItem("moodTheme", theme.id);
+
+      // 選択状態を更新
+      document
+        .querySelectorAll(".theme-preview")
+        .forEach((p) => p.classList.remove("selected"));
+      preview.classList.add("selected");
+    });
+
+    themePreviewGrid.appendChild(preview);
+  });
+
+  // テーマボタンのイベント
+  themeBtn.addEventListener("click", () => {
+    themeBackdrop.classList.add("active");
+  });
+
+  themeClose.addEventListener("click", () => {
+    themeBackdrop.classList.remove("active");
+  });
+
+  themeBackdrop.addEventListener("click", (e) => {
+    if (e.target === themeBackdrop) {
+      themeBackdrop.classList.remove("active");
+    }
+  });
+}
+
+function applyTheme(themeId) {
+  document.documentElement.setAttribute("data-theme", themeId);
+}
+
+initThemeSystem();

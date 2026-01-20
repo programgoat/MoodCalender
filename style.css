@@ -3,15 +3,16 @@
 =========================== */
 
 :root {
-  --bg: #0f172a;
-  --card: #020617;
-  --accent: #38bdf8;
-  --accent-soft: rgba(56, 189, 248, 0.15);
-  --text-main: #e5e7eb;
-  --text-sub: #9ca3af;
+  /* テーマ色（デフォルトはMidNight） */
+  --bg: var(--theme-bg-primary, #0f172a);
+  --card: var(--theme-bg-secondary, #020617);
+  --accent: var(--theme-accent, #38bdf8);
+  --accent-soft: var(--theme-accent-soft, rgba(56, 189, 248, 0.15));
+  --text-main: var(--theme-text-main, #e5e7eb);
+  --text-sub: var(--theme-text-sub, #9ca3af);
   --danger: #f97373;
   --success: #4ade80;
-  --border: #1f2937;
+  --border: var(--theme-border, rgba(148, 163, 184, 0.35));
   --radius-lg: 18px;
   --radius-md: 10px;
   --shadow-soft: 0 18px 45px rgba(15, 23, 42, 0.9);
@@ -35,6 +36,12 @@ body {
   padding: 24px;
 }
 
+@media (max-width: 600px) {
+  body {
+    padding: 12px;
+  }
+}
+
 /* ===========================
    アプリ全体
 =========================== */
@@ -49,6 +56,55 @@ body {
   padding: 22px 22px 18px;
   position: relative;
   overflow: hidden;
+}
+
+/* テーマ別背景モチーフ */
+body[data-theme="midnight"] .app,
+body:not([data-theme]) .app {
+  background-image:
+    url('data:image/svg+xml;utf-8,<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1000 1000"><ellipse cx="300" cy="400" rx="120" ry="200" fill="%2364c8ff" opacity="0.6"/><path d="M 260 600 Q 250 650 260 700 Q 270 650 280 700 M 280 600 Q 270 650 280 700 Q 290 650 300 700 M 300 600 Q 290 650 300 700 Q 310 650 320 700 M 320 600 Q 310 650 320 700 Q 330 650 340 700" stroke="%2364c8ff" stroke-width="8" fill="none" opacity="0.7"/><ellipse cx="700" cy="500" rx="140" ry="220" fill="%2364c8ff" opacity="0.55"/><path d="M 650 750 Q 640 800 650 850 Q 660 800 670 850 M 680 750 Q 670 800 680 850 Q 690 800 700 850 M 710 750 Q 700 800 710 850 Q 720 800 730 850 M 740 750 Q 730 800 740 850 Q 750 800 760 850" stroke="%2364c8ff" stroke-width="9" fill="none" opacity="0.65"/><circle cx="200" cy="300" r="80" fill="%2364c8ff" opacity="0.65"/><circle cx="400" cy="250" r="70" fill="%2364c8ff" opacity="0.6"/><circle cx="150" cy="800" r="90" fill="%2364c8ff" opacity="0.58"/><circle cx="800" cy="850" r="75" fill="%2364c8ff" opacity="0.55"/></svg>');
+  background-size: cover;
+  background-position: center;
+  background-blend-mode: multiply;
+}
+
+body[data-theme="light"] .app {
+  background-image:
+    url('data:image/svg+xml;utf-8,<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1000 1000"><defs><radialGradient id="sun" cx="35%" cy="35%"><stop offset="0%" stop-color="%23ffd700" stop-opacity="0.8"/><stop offset="60%" stop-color="%23ffb700" stop-opacity="0.5"/><stop offset="100%" stop-color="%23ff9500" stop-opacity="0.15"/></radialGradient></defs><circle cx="150" cy="200" r="200" fill="url(%23sun)"/><ellipse cx="300" cy="250" rx="250" ry="120" fill="%23ffffff" opacity="0.75"/><ellipse cx="550" cy="150" rx="280" ry="140" fill="%23fffbf7" opacity="0.7"/><ellipse cx="800" cy="280" rx="300" ry="150" fill="%23ffffff" opacity="0.72"/><ellipse cx="150" cy="500" rx="250" ry="120" fill="%23fffbf7" opacity="0.65"/><ellipse cx="700" cy="600" rx="270" ry="130" fill="%23ffffff" opacity="0.6"/></svg>');
+  background-size: cover;
+  background-position: center;
+  background-blend-mode: overlay;
+}
+
+body[data-theme="future"] .app {
+  background-image:
+    url('data:image/svg+xml;utf-8,<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1000 1000"><defs><linearGradient id="bg" x1="0%" y1="0%" x2="0%" y2="100%"><stop offset="0%" stop-color="%2300ff88" stop-opacity="0.65"/><stop offset="100%" stop-color="%2300ff88" stop-opacity="0.25"/></linearGradient></defs><rect x="50" y="600" width="150" height="400" fill="url(%23bg)" stroke="%2300ff88" stroke-width="4" stroke-opacity="0.7"/><rect x="60" y="620" width="15" height="25" fill="%2300ff88" opacity="0.75"/><rect x="100" y="620" width="15" height="25" fill="%2300ff88" opacity="0.75"/><rect x="140" y="620" width="15" height="25" fill="%2300ffff" opacity="0.8"/><rect x="300" y="550" width="140" height="450" fill="url(%23bg)" stroke="%2300ff88" stroke-width="4" stroke-opacity="0.7"/><rect x="315" y="575" width="18" height="30" fill="%2300ff88" opacity="0.75"/><rect x="370" y="575" width="18" height="30" fill="%2300ffff" opacity="0.8"/><rect x="550" y="600" width="180" height="400" fill="url(%23bg)" stroke="%2300ff88" stroke-width="4" stroke-opacity="0.7"/><rect x="565" y="625" width="20" height="28" fill="%2300ff88" opacity="0.75"/><rect x="620" y="625" width="20" height="28" fill="%2300ffff" opacity="0.8"/><rect x="800" y="580" width="150" height="420" fill="url(%23bg)" stroke="%2300ff88" stroke-width="4" stroke-opacity="0.7"/><rect x="815" y="605" width="18" height="28" fill="%2300ffff" opacity="0.8"/><circle cx="200" cy="400" r="150" fill="%2300ffff" opacity="0.25"/></svg>');
+  background-size: cover;
+  background-position: center;
+  background-blend-mode: screen;
+}
+
+body[data-theme="ruin"] .app {
+  background-image:
+    url('data:image/svg+xml;utf-8,<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1000 1000"><polygon points="100,400 500,50 700,500 300,750" fill="%23d4a574" opacity="0.55"/><rect x="100" y="400" width="40" height="350" fill="%23c9935e" opacity="0.45"/><rect x="160" y="400" width="40" height="350" fill="%23d4a574" opacity="0.42"/><rect x="220" y="400" width="40" height="350" fill="%23c9935e" opacity="0.4"/><rect x="280" y="400" width="40" height="350" fill="%23d4a574" opacity="0.38"/><rect x="340" y="400" width="40" height="350" fill="%23b8855a" opacity="0.35"/><line x1="100" y1="450" x2="380" y2="450" stroke="%23c9935e" stroke-width="2" opacity="0.3"/><line x1="100" y1="500" x2="380" y2="500" stroke="%23c9935e" stroke-width="2" opacity="0.28"/><line x1="100" y1="550" x2="380" y2="550" stroke="%23d4a574" stroke-width="2" opacity="0.26"/><line x1="100" y1="600" x2="380" y2="600" stroke="%23c9935e" stroke-width="2" opacity="0.24"/><line x1="100" y1="650" x2="380" y2="650" stroke="%23b8855a" stroke-width="2" opacity="0.22"/><polygon points="650,300 850,100 950,450 750,600" fill="%23c9935e" opacity="0.5"/><rect x="660" y="250" width="35" height="400" fill="%23d4a574" opacity="0.4"/><rect x="715" y="250" width="35" height="400" fill="%23c9935e" opacity="0.38"/><rect x="770" y="250" width="35" height="400" fill="%23d4a574" opacity="0.36"/><polygon points="250,750 450,650 500,850 300,950" fill="%23b8855a" opacity="0.48"/><rect x="270" y="710" width="40" height="200" fill="%23d4a574" opacity="0.35"/><rect x="330" y="710" width="40" height="200" fill="%23c9935e" opacity="0.33"/></svg>');
+  background-size: cover;
+  background-position: center;
+  background-blend-mode: multiply;
+}
+
+body[data-theme="crystal"] .app {
+  background-image:
+    url('data:image/svg+xml;utf-8,<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1000 1000"><defs><linearGradient id="z1" x1="0%" y1="0%" x2="100%" y2="100%"><stop offset="0%" stop-color="%23a78bfa" stop-opacity="0.7"/><stop offset="100%" stop-color="%23c4b5fd" stop-opacity="0.3"/></linearGradient><linearGradient id="z2" x1="100%" y1="0%" x2="0%" y2="100%"><stop offset="0%" stop-color="%239f7aea" stop-opacity="0.65"/><stop offset="100%" stop-color="%23a78bfa" stop-opacity="0.25"/></linearGradient></defs><polygon points="150,80 280,30 410,80 380,220 250,260 120,200" fill="url(%23z1)" opacity="0.72"/><polygon points="650,150 880,50 1000,250 850,380 650,350 500,280" fill="url(%23z2)" opacity="0.68"/><polygon points="900,100 1050,30 1150,150 1020,260 880,240" fill="url(%23z1)" opacity="0.62"/><polygon points="200,650 380,550 520,650 480,800 350,850 180,750" fill="url(%23z2)" opacity="0.68"/><polygon points="700,750 950,600 1100,800 1000,950 800,900 680,850" fill="url(%23z1)" opacity="0.62"/><polygon points="350,900 520,800 650,950 580,1100 420,1150 300,1000" fill="url(%23z2)" opacity="0.58"/><line x1="150" y1="80" x2="350" y2="200" stroke="%23a78bfa" stroke-width="6" opacity="0.58"/><line x1="650" y1="150" x2="950" y2="300" stroke="%239f7aea" stroke-width="6" opacity="0.55"/><line x1="200" y1="650" x2="450" y2="800" stroke="%23a78bfa" stroke-width="6" opacity="0.55"/><line x1="700" y1="750" x2="1000" y2="920" stroke="%239f7aea" stroke-width="6" opacity="0.52"/></svg>');
+  background-size: cover;
+  background-position: center;
+  background-blend-mode: screen;
+}
+
+@media (max-width: 600px) {
+  .app {
+    padding: 14px 12px 10px;
+    border-radius: 16px;
+  }
 }
 
 .app::before {
@@ -76,6 +132,12 @@ body {
   }
 }
 
+@media (max-width: 600px) {
+  .app-inner {
+    gap: 10px;
+  }
+}
+
 /* ===========================
    ヘッダー
 =========================== */
@@ -88,10 +150,26 @@ body {
   gap: 12px;
 }
 
+@media (max-width: 600px) {
+  .header {
+    flex-wrap: wrap;
+    margin-bottom: 12px;
+    gap: 8px;
+  }
+}
+
 .title-block {
   display: flex;
   align-items: center;
   gap: 10px;
+}
+
+@media (max-width: 600px) {
+  .title-block {
+    gap: 8px;
+    flex: 1;
+    min-width: 0;
+  }
 }
 
 .logo {
@@ -107,6 +185,15 @@ body {
   font-size: 18px;
   box-shadow: 0 0 0 1px rgba(15, 23, 42, 0.7),
     0 10px 25px rgba(56, 189, 248, 0.45);
+  flex-shrink: 0;
+}
+
+@media (max-width: 600px) {
+  .logo {
+    width: 28px;
+    height: 28px;
+    font-size: 14px;
+  }
 }
 
 .title-text-main {
@@ -118,19 +205,44 @@ body {
   gap: 6px;
 }
 
+@media (max-width: 600px) {
+  .title-text-main {
+    font-size: 14px;
+    gap: 4px;
+  }
+}
+
 .title-pill {
   font-size: 11px;
   padding: 2px 8px;
   border-radius: 999px;
-  border: 1px solid rgba(148, 163, 184, 0.4);
+  border: 1px solid var(--theme-border);
   color: var(--text-sub);
   background: rgba(15, 23, 42, 0.7);
+}
+
+@media (max-width: 600px) {
+  .title-pill {
+    font-size: 10px;
+  }
+}
+
+/* Light テーマ用の例外 */
+body[data-theme="light"] .title-pill {
+  background: rgba(226, 232, 240, 0.9);
 }
 
 .title-text-sub {
   font-size: 12px;
   color: var(--text-sub);
   margin-top: 2px;
+}
+
+@media (max-width: 600px) {
+  .title-text-sub {
+    font-size: 10px;
+    display: none;
+  }
 }
 
 .header-right {
@@ -141,6 +253,15 @@ body {
   color: var(--text-sub);
   flex-wrap: wrap;
   justify-content: flex-end;
+}
+
+@media (max-width: 600px) {
+  .header-right {
+    font-size: 10px;
+    gap: 6px;
+    width: 100%;
+    justify-content: space-between;
+  }
 }
 
 .dot {
@@ -155,8 +276,8 @@ body {
 .help-btn {
   padding: 4px 8px;
   border-radius: 50%;
-  border: 1px solid rgba(148, 163, 184, 0.6);
-  background: rgba(15, 23, 42, 0.9);
+  border: 1px solid var(--theme-border);
+  background: var(--theme-card-bg);
   color: var(--text-sub);
   cursor: pointer;
   font-size: 14px;
@@ -166,7 +287,7 @@ body {
 .help-btn:hover {
   transform: scale(1.15);
   border-color: var(--accent);
-  color: #e5e7eb;
+  color: var(--text-main);
 }
 
 /* ===========================
@@ -197,8 +318,8 @@ body {
 .calendar-header button {
   padding: 4px 10px;
   border-radius: 999px;
-  border: 1px solid rgba(148, 163, 184, 0.6);
-  background: rgba(15, 23, 42, 0.9);
+  border: 1px solid var(--theme-border);
+  background: var(--theme-card-bg);
   color: var(--text-sub);
   cursor: pointer;
   font-size: 11px;
@@ -208,7 +329,7 @@ body {
 .calendar-header button:hover {
   transform: scale(1.1);
   border-color: var(--accent);
-  color: #e5e7eb;
+  color: var(--text-main);
 }
 
 .weekday-row {
@@ -229,8 +350,8 @@ body {
 
 .day {
   border-radius: 10px;
-  border: 1px solid rgba(148, 163, 184, 0.35);
-  background: rgba(15, 23, 42, 0.9);
+  border: 1px solid var(--theme-border);
+  background: var(--theme-card-bg);
   padding: 8px 6px;
   text-align: right;
   cursor: pointer;
@@ -256,7 +377,7 @@ body {
 .day-number {
   font-size: 12px;
   font-weight: 500;
-  color: #e5e7eb;
+  color: var(--text-main);
 }
 
 .day-mood-label {
@@ -270,7 +391,7 @@ body {
 
 /* 今日 */
 .day-today {
-  box-shadow: 0 0 0 2px rgba(56, 189, 248, 0.7);
+  box-shadow: 0 0 0 2px var(--theme-accent);
 }
 
 /* 気分色 */
@@ -311,9 +432,9 @@ body {
 .modal {
   width: 100%;
   max-width: 420px;
-  background: rgba(15, 23, 42, 0.98);
+  background: var(--theme-card-bg);
   border-radius: 18px;
-  border: 1px solid rgba(148, 163, 184, 0.5);
+  border: 1px solid var(--theme-border);
   box-shadow: 0 18px 45px rgba(15, 23, 42, 0.95);
   padding: 14px 14px 12px;
   transform: translateY(20px) scale(0.95);
@@ -329,8 +450,8 @@ body {
   flex: 1;
   padding: 7px 0;
   border-radius: 999px;
-  border: 1px solid rgba(148, 163, 184, 0.4);
-  background: rgba(15, 23, 42, 0.9);
+  border: 1px solid var(--theme-border);
+  background: var(--theme-card-bg);
   color: var(--text-sub);
   font-size: 11px;
   display: flex;
@@ -349,8 +470,8 @@ body {
 .mood-option.active {
   animation: moodPop 0.25s ease-out;
   border-color: var(--accent);
-  background: rgba(56, 189, 248, 0.25);
-  color: #e5f3ff;
+  background: var(--theme-accent-soft);
+  color: var(--text-main);
 }
 
 @keyframes moodPop {
@@ -381,13 +502,29 @@ body {
 }
 
 .help-modal {
-  background: #fff;
-  color: #333;
+  background: var(--theme-card-bg);
+  color: var(--text-main);
   padding: 20px;
   border-radius: 14px;
   width: 90%;
   max-width: 380px;
+  border: 1px solid var(--theme-border);
   animation: helpPop 0.25s ease-out;
+}
+
+.help-modal h2 {
+  margin-top: 0;
+  color: var(--text-main);
+}
+
+.help-modal ul {
+  padding-left: 20px;
+  color: var(--text-main);
+}
+
+.help-modal li {
+  margin-bottom: 8px;
+  color: var(--text-sub);
 }
 
 @keyframes helpPop {
@@ -399,11 +536,12 @@ body {
   margin-top: 12px;
   padding: 6px 12px;
   border-radius: 8px;
-  border: none;
-  background: #38bdf8;
-  color: white;
+  border: 1px solid var(--accent);
+  background: var(--theme-accent-soft);
+  color: var(--accent);
   cursor: pointer;
   transition: 0.2s;
+  font-weight: 600;
 }
 
 .help-close:hover {
@@ -453,8 +591,8 @@ body {
   width: 100%;
   padding: 10px 0;
   border-radius: 8px;
-  border: 1px solid rgba(148, 163, 184, 0.6);
-  background: rgba(56, 189, 248, 0.15);
+  border: 1px solid var(--theme-border);
+  background: var(--theme-accent-soft);
   color: var(--accent);
   font-weight: 600;
   cursor: pointer;
@@ -498,9 +636,9 @@ body {
 .analysis-modal {
   width: 100%;
   max-width: 600px;
-  background: rgba(15, 23, 42, 0.98);
+  background: var(--theme-card-bg);
   border-radius: 18px;
-  border: 1px solid rgba(148, 163, 184, 0.5);
+  border: 1px solid var(--theme-border);
   box-shadow: 0 18px 45px rgba(15, 23, 42, 0.95);
   padding: 16px;
   transform: translateY(20px) scale(0.95);
@@ -535,7 +673,7 @@ body {
 }
 
 .analysis-close:hover {
-  color: #e5e7eb;
+  color: var(--text-main);
   transform: scale(1.1);
 }
 
@@ -642,11 +780,11 @@ body {
 }
 
 .stat-card {
-  background: radial-gradient(circle at top left, rgba(56, 189, 248, 0.12), transparent 55%),
-    radial-gradient(circle at bottom right, rgba(129, 140, 248, 0.12), transparent 55%),
-    rgba(15, 23, 42, 0.96);
+  background: radial-gradient(circle at top left, var(--theme-accent-soft), transparent 55%),
+    radial-gradient(circle at bottom right, var(--theme-gradient-2), transparent 55%),
+    var(--theme-card-bg);
   border-radius: var(--radius-lg);
-  border: 1px solid rgba(148, 163, 184, 0.35);
+  border: 1px solid var(--theme-border);
   padding: 12px;
   animation: cardPop 0.4s ease-out;
 }
@@ -733,18 +871,18 @@ body {
 .selected-day-info {
   font-size: 13px;
   font-weight: 500;
-  color: #e5e7eb;
+  color: var(--text-main);
   margin-bottom: 8px;
 }
 
 .note-box {
-  background: rgba(15, 23, 42, 0.9);
-  border: 1px solid rgba(148, 163, 184, 0.2);
+  background: var(--theme-card-bg);
+  border: 1px solid var(--theme-border);
   border-radius: 8px;
   padding: 10px;
   min-height: 60px;
   font-size: 12px;
-  color: #e5e7eb;
+  color: var(--text-main);
   line-height: 1.5;
 }
 
@@ -758,7 +896,7 @@ body {
 }
 
 .pill strong {
-  color: #e5e7eb;
+  color: var(--text-main);
 }
 
 .pill-soft {
@@ -773,7 +911,7 @@ body {
 .footer {
   margin-top: auto;
   padding-top: 12px;
-  border-top: 1px solid rgba(148, 163, 184, 0.15);
+  border-top: 1px solid var(--theme-border);
   font-size: 11px;
   color: var(--text-sub);
   text-align: center;
@@ -824,7 +962,7 @@ body {
 }
 
 .modal-close:hover {
-  color: #e5e7eb;
+  color: var(--text-main);
   transform: scale(1.1);
 }
 
@@ -848,9 +986,9 @@ textarea {
   height: 80px;
   padding: 8px;
   border-radius: 8px;
-  border: 1px solid rgba(148, 163, 184, 0.3);
-  background: rgba(15, 23, 42, 0.9);
-  color: #e5e7eb;
+  border: 1px solid var(--theme-border);
+  background: var(--theme-card-bg);
+  color: var(--text-main);
   font-family: inherit;
   font-size: 12px;
   resize: none;
@@ -871,7 +1009,7 @@ textarea::placeholder {
   flex: 1;
   padding: 8px;
   border-radius: 8px;
-  border: 1px solid rgba(148, 163, 184, 0.4);
+  border: 1px solid var(--theme-border);
   font-size: 12px;
   cursor: pointer;
   transition: 0.2s;
@@ -882,7 +1020,7 @@ textarea::placeholder {
 }
 
 .btn-primary {
-  background: rgba(56, 189, 248, 0.25);
+  background: var(--theme-accent-soft);
   color: var(--accent);
   border-color: var(--accent);
   font-weight: 600;
@@ -894,14 +1032,14 @@ textarea::placeholder {
 }
 
 .btn-secondary {
-  background: rgba(15, 23, 42, 0.9);
+  background: var(--theme-card-bg);
   color: var(--text-sub);
-  border-color: rgba(148, 163, 184, 0.4);
+  border-color: var(--theme-border);
 }
 
 .btn-secondary:hover {
   border-color: var(--text-sub);
-  color: #e5e7eb;
+  color: var(--text-main);
   transform: scale(1.05);
 }
 
@@ -920,8 +1058,8 @@ textarea::placeholder {
 .calendar-header button {
   padding: 4px 10px;
   border-radius: 999px;
-  border: 1px solid rgba(148, 163, 184, 0.6);
-  background: rgba(15, 23, 42, 0.9);
+  border: 1px solid var(--theme-border);
+  background: var(--theme-card-bg);
   color: var(--text-sub);
   cursor: pointer;
   font-size: 11px;
@@ -931,7 +1069,7 @@ textarea::placeholder {
 .calendar-header button:hover {
   transform: scale(1.1);
   border-color: var(--accent);
-  color: #e5e7eb;
+  color: var(--text-main);
 }
 
 .calendar-header strong {
@@ -1280,6 +1418,426 @@ textarea::placeholder {
   }
 }
 
+/* ===========================
+   テーマシステム
+=========================== */
 
+:root {
+  --theme: midnight;
+}
 
+/* 1. MidNight テーマ（デフォルト - 黒と青） */
+:root[data-theme="midnight"],
+:root:not([data-theme]) {
+  --theme-bg-primary: #0f172a;
+  --theme-bg-secondary: #020617;
+  --theme-card-bg: rgba(15, 23, 42, 0.96);
+  --theme-accent: #38bdf8;
+  --theme-accent-soft: rgba(56, 189, 248, 0.15);
+  --theme-text-main: #e5e7eb;
+  --theme-text-sub: #9ca3af;
+  --theme-border: rgba(148, 163, 184, 0.35);
+  --theme-logo-start: #38bdf8;
+  --theme-logo-mid: #0ea5e9;
+  --theme-logo-end: #1d4ed8;
+  --theme-gradient-1: rgba(56, 189, 248, 0.18);
+  --theme-gradient-2: rgba(129, 140, 248, 0.18);
+}
 
+body[data-theme="midnight"],
+body:not([data-theme]) {
+  /* SVG背景：深海と深い森 */
+  background-image:
+    url('data:image/svg+xml;utf8,<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 2000 2000" preserveAspectRatio="xMidYMid slice"><defs><radialGradient id="bubble"><stop offset="0%" stop-color="%2364c8ff" stop-opacity="0.25"/><stop offset="100%" stop-color="%2364c8ff" stop-opacity="0.05"/></radialGradient><radialGradient id="jellyfish"><stop offset="0%" stop-color="%2396e5ff" stop-opacity="0.15"/><stop offset="100%" stop-color="%2396e5ff" stop-opacity="0"/></radialGradient><radialGradient id="moon"><stop offset="0%" stop-color="%23ffffff" stop-opacity="0.12"/><stop offset="70%" stop-color="%23ffffff" stop-opacity="0.05"/><stop offset="100%" stop-color="%23ffffff" stop-opacity="0"/></radialGradient></defs><circle cx="400" cy="300" r="80" fill="url(%23bubble)"/><circle cx="250" cy="600" r="60" fill="url(%23bubble)"/><circle cx="550" cy="450" r="50" fill="url(%23bubble)"/><circle cx="320" cy="900" r="70" fill="url(%23bubble)"/><ellipse cx="300" cy="500" rx="150" ry="250" fill="url(%23jellyfish)"/><ellipse cx="400" cy="1000" rx="120" ry="200" fill="url(%23jellyfish)"/><circle cx="1000" cy="500" r="400" fill="url(%23moon)"/><polygon points="1200,800 1300,900 1200,1000 1100,900" fill="%23001a33" opacity="0.08"/><polygon points="1400,1200 1550,1300 1400,1400 1250,1300" fill="%23003344" opacity="0.06"/><polygon points="1600,600 1750,700 1600,800 1450,700" fill="%23001a33" opacity="0.05"/></svg>'),
+    linear-gradient(to right, #001a4d 0%, #0a2540 25%, #1a1f3a 50%, #1a1f3a 50%, #0d1b2a 75%, #051213 100%),
+    linear-gradient(180deg, #0f1719 0%, #0a0d12 50%, #000000 100%);
+  background-size: 100% 100%, 100% 100%, 100% 100%;
+  background-position: 0 0, 0 0, 0 0;
+  background-repeat: no-repeat, no-repeat, no-repeat;
+}
+
+/* 2. Light テーマ（白をモチーフ） */
+:root[data-theme="light"] {
+  --theme-bg-primary: #f8fafc;
+  --theme-bg-secondary: #f0f4f8;
+  --theme-card-bg: rgba(255, 255, 255, 0.98);
+  --theme-accent: #0369a1;
+  --theme-accent-soft: rgba(3, 105, 161, 0.12);
+  --theme-text-main: #1e293b;
+  --theme-text-sub: #64748b;
+  --theme-border: rgba(226, 232, 240, 0.8);
+  --theme-logo-start: #0369a1;
+  --theme-logo-mid: #0284c7;
+  --theme-logo-end: #0c4a6e;
+  --theme-gradient-1: rgba(3, 105, 161, 0.12);
+  --theme-gradient-2: rgba(59, 130, 246, 0.12);
+}
+
+body[data-theme="light"] {
+  /* SVG背景：雲と朝焼け */
+  background-image:
+    url('data:image/svg+xml;utf8,<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 2000 2000" preserveAspectRatio="xMidYMid slice"><defs><filter id="cloudBlur"><feGaussianBlur in="SourceGraphic" stdDeviation="10"/></filter></defs><g filter="url(%23cloudBlur)"><ellipse cx="400" cy="300" rx="350" ry="180" fill="%23ffffff" opacity="0.7"/><ellipse cx="700" cy="250" rx="320" ry="160" fill="%23f5f1e8" opacity="0.65"/><ellipse cx="950" cy="350" rx="380" ry="190" fill="%23ffffff" opacity="0.6"/><ellipse cx="1500" cy="300" rx="400" ry="200" fill="%23f5f1e8" opacity="0.65"/><ellipse cx="1850" cy="250" rx="360" ry="180" fill="%23ffffff" opacity="0.6"/><ellipse cx="1200" cy="500" rx="330" ry="165" fill="%23f5f1e8" opacity="0.55"/><ellipse cx="300" cy="600" rx="300" ry="150" fill="%23fffbf7" opacity="0.5"/><ellipse cx="600" cy="150" rx="280" ry="140" fill="%23ffffff" opacity="0.55"/><ellipse cx="1600" cy="450" rx="320" ry="160" fill="%23f5f1e8" opacity="0.5"/></g></svg>'),
+    linear-gradient(180deg, #ffeaa7 0%, #ffecb3 20%, #fffaf5 40%, #f5f1e8 70%, #f0ebe3 100%);
+  background-size: 100% 100%, 100% 100%;
+  background-position: 0 0, 0 0;
+  background-repeat: no-repeat, no-repeat;
+  color: #1a202c;
+}
+
+body[data-theme="light"] .text-main {
+  color: #1a202c !important;
+}
+
+body[data-theme="light"] .title-text-main {
+  color: #0c3d66 !important;
+}
+
+body[data-theme="light"] .title-text-sub {
+  color: #475569 !important;
+}
+
+/* 3. Future テーマ（サイバー的） */
+:root[data-theme="future"] {
+  --theme-bg-primary: #0a0e27;
+  --theme-bg-secondary: #080b1a;
+  --theme-card-bg: rgba(8, 11, 26, 0.96);
+  --theme-accent: #00ff88;
+  --theme-accent-soft: rgba(0, 255, 136, 0.15);
+  --theme-text-main: #00ff88;
+  --theme-text-sub: #00cc6f;
+  --theme-border: rgba(0, 255, 136, 0.25);
+  --theme-logo-start: #00ff88;
+  --theme-logo-mid: #00dd77;
+  --theme-logo-end: #00aa55;
+  --theme-gradient-1: rgba(0, 255, 136, 0.2);
+  --theme-gradient-2: rgba(0, 255, 200, 0.15);
+}
+
+body[data-theme="future"] {
+  /* SVG背景：サイバー都市のビルディング */
+  background-image:
+    url('data:image/svg+xml;utf8,<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 2000 2000" preserveAspectRatio="xMidYMid slice"><defs><filter id="neonGlow"><feGaussianBlur in="SourceGraphic" stdDeviation="4"/></filter><linearGradient id="buildingGrad" x1="0%" y1="0%" x2="0%" y2="100%"><stop offset="0%" stop-color="%2300ff88" stop-opacity="0.4"/><stop offset="100%" stop-color="%2300ff88" stop-opacity="0.15"/></linearGradient></defs><rect x="100" y="1000" width="280" height="1000" fill="url(%23buildingGrad)" stroke="%2300ff88" stroke-width="3"/><rect x="500" y="950" width="220" height="1050" fill="url(%23buildingGrad)" stroke="%2300ff88" stroke-width="3"/><rect x="850" y="1100" width="300" height="900" fill="url(%23buildingGrad)" stroke="%2300ff88" stroke-width="3"/><rect x="1300" y="1000" width="240" height="1000" fill="url(%23buildingGrad)" stroke="%2300ff88" stroke-width="3"/><rect x="1650" y="1050" width="280" height="950" fill="url(%23buildingGrad)" stroke="%2300ff88" stroke-width="3"/><circle cx="300" cy="800" r="200" fill="%2300ffff" opacity="0.2" filter="url(%23neonGlow)"/><circle cx="1600" cy="700" r="250" fill="%2300ff88" opacity="0.15" filter="url(%23neonGlow)"/></svg>'),
+    repeating-linear-gradient(90deg, rgba(0, 255, 136, 0.08) 0, rgba(0, 255, 136, 0.08) 2px, transparent 2px, transparent 80px),
+    repeating-linear-gradient(0deg, rgba(0, 255, 136, 0.08) 0, rgba(0, 255, 136, 0.08) 2px, transparent 2px, transparent 80px),
+    linear-gradient(135deg, #0a0e27 0%, #080b1a 50%, #000a15 100%);
+  background-size: 100% 100%, 80px 80px, 80px 80px, 100% 100%;
+  background-position: 0 0, 0 0, 0 0, 0 0;
+}
+
+/* 4. Ruin テーマ（古代遺跡） */
+:root[data-theme="ruin"] {
+  --theme-bg-primary: #3d2817;
+  --theme-bg-secondary: #2a1810;
+  --theme-card-bg: rgba(42, 24, 16, 0.96);
+  --theme-accent: #d4a574;
+  --theme-accent-soft: rgba(212, 165, 116, 0.15);
+  --theme-text-main: #e8d7c3;
+  --theme-text-sub: #a89f89;
+  --theme-border: rgba(212, 165, 116, 0.35);
+  --theme-logo-start: #d4a574;
+  --theme-logo-mid: #c9935e;
+  --theme-logo-end: #8b6f47;
+  --theme-gradient-1: rgba(212, 165, 116, 0.15);
+  --theme-gradient-2: rgba(198, 124, 78, 0.12);
+}
+
+body[data-theme="ruin"] {
+  /* SVG背景：アステカ風遺跡 */
+  background-image:
+    url('data:image/svg+xml;utf8,<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 2000 2000" preserveAspectRatio="xMidYMid slice"><defs><filter id="stoneShadow"><feGaussianBlur in="SourceGraphic" stdDeviation="3"/></filter></defs><polygon points="300,300 800,100 1100,600 600,800" fill="%23d4a574" opacity="0.3" filter="url(%23stoneShadow)"/><polygon points="1200,400 1600,200 1800,700 1400,900" fill="%23c9935e" opacity="0.25" filter="url(%23stoneShadow)"/><polygon points="250,900 600,750 800,1300 450,1450" fill="%23d4a574" opacity="0.28" filter="url(%23stoneShadow)"/><polygon points="1100,1100 1500,950 1700,1600 1300,1750" fill="%23c9935e" opacity="0.22" filter="url(%23stoneShadow)"/><polygon points="400,1500 800,1350 1000,1800 600,1950" fill="%23b8855a" opacity="0.25" filter="url(%23stoneShadow)"/><circle cx="200" cy="250" r="120" fill="%23d4a574" opacity="0.2"/><circle cx="1800" cy="700" r="180" fill="%23c9935e" opacity="0.18"/><circle cx="600" cy="1600" r="150" fill="%23b8855a" opacity="0.2"/><rect x="300" y="200" width="120" height="120" fill="%23d4a574" opacity="0.15"/><rect x="500" y="350" width="100" height="100" fill="%23c9935e" opacity="0.12"/><rect x="1200" y="400" width="150" height="150" fill="%23d4a574" opacity="0.14"/><rect x="1600" y="700" width="120" height="120" fill="%23c9935e" opacity="0.12"/><rect x="400" y="1500" width="180" height="180" fill="%23b8855a" opacity="0.13"/><rect x="1000" y="1200" width="150" height="150" fill="%23d4a574" opacity="0.12"/></svg>'),
+    repeating-linear-gradient(45deg, rgba(212, 165, 116, 0.12) 0, rgba(212, 165, 116, 0.12) 60px, transparent 60px, transparent 120px),
+    linear-gradient(135deg, #4a3728 0%, #3d2817 40%, #2a1810 70%, #1a0f08 100%);
+  background-size: 100% 100%, 120px 120px, 100% 100%;
+  background-position: 0 0, 0 0, 0 0;
+}
+
+/* 5. Crystal テーマ（透明/ガラス） */
+:root[data-theme="crystal"] {
+  --theme-bg-primary: #0f1419;
+  --theme-bg-secondary: #0a0d12;
+  --theme-card-bg: rgba(15, 20, 25, 0.7);
+  --theme-accent: #a78bfa;
+  --theme-accent-soft: rgba(167, 139, 250, 0.12);
+  --theme-text-main: #e0e7ff;
+  --theme-text-sub: #c7d2fe;
+  --theme-border: rgba(167, 139, 250, 0.3);
+  --theme-logo-start: #a78bfa;
+  --theme-logo-mid: #9f7aea;
+  --theme-logo-end: #8b5cf6;
+  --theme-gradient-1: rgba(167, 139, 250, 0.15);
+  --theme-gradient-2: rgba(196, 181, 253, 0.12);
+}
+
+body[data-theme="crystal"] {
+  /* SVG背景：ガラス結晶 */
+  background-image:
+    url('data:image/svg+xml;utf8,<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 2000 2000" preserveAspectRatio="xMidYMid slice"><defs><filter id="crystalGlow"><feGaussianBlur in="SourceGraphic" stdDeviation="3"/></filter></defs><polygon points="300,150 500,50 700,150 500,250" fill="%23a78bfa" opacity="0.25" filter="url(%23crystalGlow)"/><polygon points="1000,300 1400,100 1800,300 1400,500" fill="%239f7aea" opacity="0.22" filter="url(%23crystalGlow)"/><polygon points="1600,200 1900,100 2000,300 1700,400" fill="%23a78bfa" opacity="0.2" filter="url(%23crystalGlow)"/><polygon points="400,1000 700,800 900,1000 700,1200" fill="%239f7aea" opacity="0.22" filter="url(%23crystalGlow)"/><polygon points="1200,1200 1700,1000 2000,1200 1700,1400" fill="%23a78bfa" opacity="0.2" filter="url(%23crystalGlow)"/><polygon points="600,1600 900,1400 1100,1600 900,1800" fill="%23c4b5fd" opacity="0.18" filter="url(%23crystalGlow)"/><line x1="200" y1="200" x2="400" y2="100" stroke="%23a78bfa" stroke-width="2" opacity="0.3"/><line x1="900" y1="300" x2="1200" y2="150" stroke="%239f7aea" stroke-width="2" opacity="0.25"/><line x1="400" y1="1000" x2="600" y2="900" stroke="%23a78bfa" stroke-width="2" opacity="0.25"/><line x1="1100" y1="1200" x2="1500" y2="1050" stroke="%239f7aea" stroke-width="2" opacity="0.22"/></svg>'),
+    repeating-linear-gradient(120deg, rgba(167, 139, 250, 0.12) 0, rgba(167, 139, 250, 0.12) 2px, transparent 2px, transparent 100px),
+    repeating-linear-gradient(60deg, rgba(167, 139, 250, 0.12) 0, rgba(167, 139, 250, 0.12) 2px, transparent 2px, transparent 100px),
+    linear-gradient(135deg, #1f1a2e 0%, #0f1419 50%, #0a0d12 100%);
+  background-size: 100% 100%, 100px 100px, 100px 100px, 100% 100%;
+  background-position: 0 0, 0 0, 0 0, 0 0;
+}
+
+/* テーマ適用先 */
+body {
+  background-color: var(--theme-bg-primary);
+  color: var(--theme-text-main);
+}
+
+.app {
+  background: linear-gradient(145deg, var(--theme-bg-secondary) 0%, var(--theme-bg-secondary) 55%, var(--theme-bg-secondary) 100%);
+  border: 1px solid var(--theme-border);
+}
+
+.app::before {
+  background:
+    radial-gradient(circle at 0% 0%, var(--theme-gradient-1) 0, transparent 55%),
+    radial-gradient(circle at 100% 0%, var(--theme-gradient-2) 0, transparent 55%);
+}
+
+.card {
+  background: radial-gradient(circle at top left, var(--theme-accent-soft), transparent 55%),
+    radial-gradient(circle at bottom right, var(--theme-gradient-2), transparent 55%),
+    var(--theme-card-bg);
+  border: 1px solid var(--theme-border);
+}
+
+.logo {
+  background: radial-gradient(circle at 30% 0%, var(--theme-logo-start) 0, var(--theme-logo-mid) 40%, var(--theme-logo-end) 100%);
+}
+
+.title-pill {
+  border: 1px solid rgba(148, 163, 184, 0.4);
+  background: rgba(15, 23, 42, 0.7);
+}
+
+/* テーマ選択ボタン */
+.theme-btn {
+  padding: 4px 8px;
+  border-radius: 50%;
+  border: 1px solid var(--theme-border);
+  background: var(--theme-card-bg);
+  color: var(--text-sub);
+  cursor: pointer;
+  font-size: 14px;
+  transition: 0.2s;
+}
+
+.theme-btn:hover {
+  transform: scale(1.15);
+  border-color: var(--accent);
+  color: var(--text-main);
+}
+
+/* テーマプレビューモーダル */
+.theme-backdrop {
+  display: none;
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background: rgba(0, 0, 0, 0.7);
+  backdrop-filter: blur(4px);
+  z-index: 998;
+  align-items: center;
+  justify-content: center;
+}
+
+.theme-backdrop.active {
+  display: flex;
+}
+
+.theme-modal {
+  background: var(--theme-card-bg);
+  border: 1px solid var(--theme-border);
+  border-radius: 18px;
+  padding: 20px;
+  max-width: 90%;
+  width: 800px;
+  max-height: 90vh;
+  overflow-y: auto;
+  position: relative;
+  z-index: 999;
+}
+
+.theme-modal-header {
+  font-size: 18px;
+  font-weight: 600;
+  margin-bottom: 20px;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+
+.theme-modal-close {
+  background: none;
+  border: none;
+  color: var(--text-sub);
+  font-size: 24px;
+  cursor: pointer;
+  transition: 0.2s;
+}
+
+.theme-modal-close:hover {
+  color: var(--text-main);
+}
+
+.theme-preview-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+  gap: 12px;
+}
+
+.theme-preview {
+  cursor: pointer;
+  border-radius: 12px;
+  border: 2px solid transparent;
+  overflow: hidden;
+  transition: 0.3s;
+  height: 200px;
+  position: relative;
+}
+
+.theme-preview:hover {
+  border-color: var(--theme-accent);
+  transform: scale(1.05);
+}
+
+.theme-preview.selected {
+  border-color: var(--theme-accent);
+  box-shadow: 0 0 20px var(--theme-accent-soft);
+}
+
+.theme-preview-content {
+  width: 100%;
+  height: 100%;
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+  padding: 12px;
+  position: relative;
+}
+
+.theme-preview-name {
+  font-size: 14px;
+  font-weight: 600;
+  margin-bottom: 8px;
+}
+
+.theme-preview-colors {
+  display: flex;
+  gap: 4px;
+}
+
+.theme-preview-color-swatch {
+  width: 20px;
+  height: 20px;
+  border-radius: 4px;
+  border: 1px solid rgba(255, 255, 255, 0.2);
+}
+
+@media (max-width: 600px) {
+  .theme-modal {
+    width: 95%;
+    padding: 12px;
+  }
+
+  .theme-preview-grid {
+    grid-template-columns: 1fr;
+  }
+
+  .theme-preview {
+    height: 150px;
+  }
+}
+/* ===========================
+   テーマ別スペシャルスタイル
+=========================== */
+
+/* Light テーマ：ドロップシャドウなし、細枠線、テキスト色を明確に */
+body[data-theme="light"] {
+  --shadow-soft: none;
+  --text-main: #0c2340 !important;
+  --text-sub: #3d5a73 !important;
+}
+
+body[data-theme="light"] .app {
+  box-shadow: none;
+  border: 1px solid rgba(3, 105, 161, 0.2);
+}
+
+body[data-theme="light"] .card {
+  box-shadow: none;
+  border: 1px solid rgba(3, 105, 161, 0.2);
+  background: rgba(255, 255, 255, 0.99);
+}
+
+body[data-theme="light"] .stat-card {
+  box-shadow: none;
+  border: 1px solid rgba(3, 105, 161, 0.2);
+  background: rgba(255, 255, 255, 0.98);
+}
+
+body[data-theme="light"] .modal {
+  box-shadow: 0 8px 20px rgba(0, 0, 0, 0.1);
+  border: 1px solid rgba(3, 105, 161, 0.2);
+  background: rgba(255, 255, 255, 0.99);
+}
+
+body[data-theme="light"] .help-modal {
+  border: 1px solid rgba(3, 105, 161, 0.2);
+  background: rgba(255, 255, 255, 0.99);
+}
+
+body[data-theme="light"] .analysis-modal {
+  border: 1px solid rgba(3, 105, 161, 0.2);
+  background: rgba(255, 255, 255, 0.99);
+}
+
+body[data-theme="light"] .title-text-main,
+body[data-theme="light"] .card-title,
+body[data-theme="light"] .modal-title,
+body[data-theme="light"] .analysis-title,
+body[data-theme="light"] .stat-value {
+  color: #0c2340 !important;
+}
+
+body[data-theme="light"] .title-text-sub,
+body[data-theme="light"] .card-subtitle,
+body[data-theme="light"] .modal-subtitle,
+body[data-theme="light"] .stat-label,
+body[data-theme="light"] .selected-day-info,
+body[data-theme="light"] .pill,
+body[data-theme="light"] .note-box {
+  color: #3d5a73 !important;
+}
+
+/* Midnight テーマ：深海と深い森の効果 */
+body[data-theme="midnight"] .app::before {
+  background: none;
+  opacity: 0;
+}
+
+/* Future テーマ：グリッドの光の効果 */
+body[data-theme="future"] .app {
+  border: 1px solid rgba(0, 255, 136, 0.15);
+}
+
+/* Crystal テーマ：透明感 */
+body[data-theme="crystal"] .app {
+  border: 1px solid rgba(167, 139, 250, 0.2);
+}
+
+body[data-theme="crystal"] .card {
+  background: radial-gradient(circle at top left, rgba(167, 139, 250, 0.08), transparent 55%),
+    radial-gradient(circle at bottom right, rgba(196, 181, 253, 0.06), transparent 55%),
+    rgba(15, 20, 25, 0.5);
+  backdrop-filter: blur(8px);
+}
+
+/* Ruin テーマ：古い石の質感 */
+body[data-theme="ruin"] .app {
+  border: 1px solid rgba(212, 165, 116, 0.25);
+}

@@ -33,6 +33,9 @@
               <strong id="today-label"></strong> の今日
             </div>
 
+            <!-- テーマ選択ボタン -->
+            <button id="theme-btn" class="theme-btn" title="テーマを変更">🎨</button>
+
             <!-- 使い方ボタン -->
             <button id="help-btn" class="help-btn">？</button>
           </div>
@@ -217,6 +220,21 @@
     </div>
   </div>
   <!-- ▲▲▲ モーダル：分析 ▲▲▲ -->
+
+  <!-- ▼▼▼ テーマ選択モーダル ▼▼▼ -->
+  <div class="theme-backdrop" id="theme-backdrop">
+    <div class="theme-modal">
+      <div class="theme-modal-header">
+        <span>テーマを選択</span>
+        <button class="theme-modal-close" id="theme-close">×</button>
+      </div>
+
+      <div class="theme-preview-grid" id="theme-preview-grid">
+        <!-- JavaScriptで動的生成 -->
+      </div>
+    </div>
+  </div>
+  <!-- ▲▲▲ テーマ選択モーダル ▲▲▲ -->
 
   <!-- エフェクト用コンテナ -->
   <div id="effect-container"></div>
