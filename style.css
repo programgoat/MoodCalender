@@ -1899,6 +1899,89 @@ body[data-theme="ruin"] .app {
 }
 
 /* ===========================
+   占いランキング
+=========================== */
+
+.fortune-rank-item {
+  display: flex;
+  align-items: flex-start;
+  gap: 12px;
+  padding: 16px;
+  margin-bottom: 12px;
+  background: rgba(15, 23, 42, 0.6);
+  border: 1px solid var(--border);
+  border-radius: var(--radius-md);
+  transition: all var(--transition-fast);
+  word-wrap: break-word;
+  overflow-wrap: break-word;
+}
+
+.fortune-rank-item:hover {
+  background: rgba(56, 189, 248, 0.1);
+  border-color: var(--accent);
+  transform: translateY(-2px);
+}
+
+.fortune-rank-number {
+  flex-shrink: 0;
+  width: 44px;
+  height: 44px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background: rgba(56, 189, 248, 0.15);
+  border-radius: 50%;
+  font-weight: bold;
+  font-size: 16px;
+  color: var(--accent);
+}
+
+.fortune-rank-number.rank-1 {
+  background: rgba(255, 215, 0, 0.2);
+  color: #ffd700;
+  font-size: 20px;
+}
+
+.fortune-rank-number.rank-2 {
+  background: rgba(192, 192, 192, 0.2);
+  color: #c0c0c0;
+  font-size: 20px;
+}
+
+.fortune-rank-number.rank-3 {
+  background: rgba(205, 127, 50, 0.2);
+  color: #cd7f32;
+  font-size: 20px;
+}
+
+.fortune-rank-content {
+  flex: 1;
+  min-width: 0;
+}
+
+.fortune-rank-sign {
+  font-weight: 600;
+  color: var(--text-main);
+  margin-bottom: 6px;
+  font-size: 16px;
+}
+
+.fortune-rank-text {
+  font-size: 14px;
+  color: var(--text-sub);
+  line-height: 1.5;
+  margin-bottom: 8px;
+}
+
+.fortune-rank-lucky {
+  font-size: 12px;
+  color: var(--accent);
+  display: flex;
+  align-items: center;
+  gap: 4px;
+}
+
+/* ===========================
    ナビゲーションバー
 =========================== */
 

@@ -515,7 +515,8 @@ async function loadFortuneData() {
 }
 
 function displayFortuneRanking(fortuneData, container) {
-  console.log('Sorted signs:', Object.entries(fortuneData).sort(([,a], [,b]) => a.rank - b.rank));
+  console.log('Fortune data received:', fortuneData);
+  console.log('Number of signs:', Object.keys(fortuneData).length);
   
   // 星座を順位でソート
   const sortedSigns = Object.entries(fortuneData)
@@ -524,74 +525,29 @@ function displayFortuneRanking(fortuneData, container) {
   console.log('Sorted signs:', sortedSigns);
   
   container.innerHTML = '';
+  container.style.cssText = '';
   
   sortedSigns.forEach(([sign, data], index) => {
     console.log(`Processing ${sign}, rank ${data.rank}`);
+    
     const rankElement = document.createElement('div');
     rankElement.className = 'fortune-rank-item';
-    rankElement.style.cssText = `
-      display: flex;
-      align-items: center;
-      gap: 12px;
-      padding: 12px;
-      margin-bottom: 8px;
-      background: rgba(15, 23, 42, 0.3);
-      border: 1px solid var(--border);
-      border-radius: var(--radius-md);
-      transition: all var(--transition-fast);
-    `;
     
-    // 順位に応じたスタイル
-    const rankColors = {
-      1: '#ffd700', // 金
-      2: '#c0c0c0', // 銀
-      3: '#cd7f32'  // 銅
-    };
-    
-    const rankEmoji = {
-      1: '🥇',
-      2: '🥈', 
-      3: '🥉'
-    };
+    // 順位に応じたクラス
+    const rankClass = data.rank <= 3 ? `rank-${data.rank}` : '';
     
     rankElement.innerHTML = `
-      <div style="
-        width: 40px;
-        height: 40px;
-        display: flex;
-        align-items: center;
-        justify-content: center;
-        background: ${rankColors[data.rank] ? rankColors[data.rank] + '20' : 'rgba(56, 189, 248, 0.15)'};
-        border-radius: 50%;
-        font-weight: bold;
-        font-size: ${data.rank <= 3 ? '20px' : '16px'};
-        color: ${rankColors[data.rank] || 'var(--accent)'};
-      ">
-        ${rankEmoji[data.rank] || data.rank}
+      <div class="fortune-rank-number ${rankClass}">
+        ${data.rank === 1 ? '🥇' : data.rank === 2 ? '🥈' : data.rank === 3 ? '🥉' : data.rank}
       </div>
-      <div style="flex: 1;">
-        <div style="font-weight: 600; color: var(--text-main); margin-bottom: 4px;">
-          ${sign}
-        </div>
-        <div style="font-size: 14px; color: var(--text-sub); line-height: 1.4;">
-          ${data.text}
-        </div>
-        <div style="font-size: 12px; color: var(--accent); margin-top: 4px;">
+      <div class="fortune-rank-content">
+        <div class="fortune-rank-sign">${sign}</div>
+        <div class="fortune-rank-text">${data.text}</div>
+        <div class="fortune-rank-lucky">
           🔮 ラッキーアイテム: ${data.lucky}
         </div>
       </div>
     `;
-    
-    // ホバー効果
-    rankElement.addEventListener('mouseenter', () => {
-      rankElement.style.background = 'rgba(56, 189, 248, 0.1)';
-      rankElement.style.borderColor = 'var(--accent)';
-    });
-    
-    rankElement.addEventListener('mouseleave', () => {
-      rankElement.style.background = 'rgba(15, 23, 42, 0.3)';
-      rankElement.style.borderColor = 'var(--border)';
-    });
     
     container.appendChild(rankElement);
   });
