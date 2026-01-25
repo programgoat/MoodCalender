@@ -1,0 +1,36 @@
+name: Daily Fortune Bot
+
+on:
+  schedule:
+    # 毎日 日本時間 0:00 (UTC 15:00) に実行
+    - cron: '0 15 * * *'
+  workflow_dispatch: # これを入れると、ボタンを押して今すぐテスト実行できます
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    permissions:
+      contents: write # GitHubが自分自身のリポジトリを書き換える許可
+    steps:
+      - uses: actions/checkout@v4 # あなたのコードを読み込む
+      
+      - name: Set up Python
+        uses: actions/setup-python@v5
+        with:
+          python-version: '3.10'
+          
+      - name: Install dependencies
+        run: pip install requests # 必要なツールをインストール
+
+      - name: Run AI Script
+        env:
+          HF_TOKEN: ${{ secrets.HF_TOKEN }} # ステップ1で設定した合鍵を使う
+        run: python update_fortune.py # ステップ2で作るPythonを動かす
+
+      - name: Commit and Push
+        run: |
+          git config --local user.email "action@github.com"
+          git config --local user.name "FortuneBot"
+          git add fortune.json
+          git commit -m "AI占い更新: $(date)" || exit 0
+          git push
