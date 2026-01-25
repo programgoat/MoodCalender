@@ -33,9 +33,6 @@ body {
     sans-serif;
   background: radial-gradient(circle at top, #1e293b 0, #020617 55%, #000 100%);
   color: var(--text-main);
-  display: flex;
-  align-items: center;
-  justify-content: center;
   padding: 24px;
   padding-bottom: 100px;
 }
