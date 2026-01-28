@@ -1916,12 +1916,14 @@ body[data-theme="ruin"] .app {
 =========================== */
 
 #ranking-container {
-  display: grid;
-  grid-template-columns: repeat(auto-fit, minmax(350px, 1fr));
-  gap: 20px;
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
   padding: 0;
   background: none;
   border: none;
+  max-height: 70vh;
+  overflow-y: auto;
 }
 
 .fortune-rank-item,
@@ -1932,8 +1934,8 @@ body[data-theme="ruin"] .app {
 .fortune-rank-item {
   display: flex;
   flex-direction: row;
-  align-items: center;
-  text-align: center;
+  align-items: stretch;
+  text-align: left;
   padding: 20px;
   background: rgba(15, 23, 42, 0.8);
   border: 1px solid var(--border);
@@ -1942,6 +1944,8 @@ body[data-theme="ruin"] .app {
   cursor: pointer;
   position: relative;
   overflow: hidden;
+  min-height: 120px;
+  width: 100%;
 }
 
 .fortune-rank-item:hover {
@@ -1995,8 +1999,11 @@ body[data-theme="ruin"] .app {
 }
 
 .fortune-rank-content {
-  width: 100%;
-  margin-top: 20px;
+  flex: 1;
+  margin-left: 50px;
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
 }
 
 .fortune-rank-sign {
