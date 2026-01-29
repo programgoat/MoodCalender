@@ -537,8 +537,26 @@ function displayFortuneRanking(fortuneData, container) {
     // 順位に応じたクラス
     const rankClass = data.rank <= 3 ? `rank-${data.rank}` : '';
     
-    // テキストを短く切り取る（プレビュー用）
-    const previewText = data.text.length > 60 ? data.text.substring(0, 60) + '...' : data.text;
+    // カードの文字数制限を設定
+    const isMobile = window.innerWidth <= 470;
+    console.log('Window width:', window.innerWidth, 'Is mobile:', isMobile);
+    
+    let finalText;
+    if (isMobile) {
+      // スマホの場合：15文字ごとに<br>で改行
+      finalText = '';
+      for (let i = 0; i < data.text.length; i += 15) {
+        finalText += data.text.substring(i, i + 15);
+        if (i + 15 < data.text.length) {
+          finalText += '<br>';
+        }
+      }
+    } else {
+      // PCの場合：元のテキスト
+      finalText = data.text;
+    }
+    
+    console.log('Final text:', finalText);
     
     rankElement.innerHTML = `
       <div class="fortune-rank-number ${rankClass}">
@@ -546,8 +564,7 @@ function displayFortuneRanking(fortuneData, container) {
       </div>
       <div class="fortune-rank-content" style="display: block; writing-mode: horizontal-tb; width: 100%; min-width: 250px;">
         <div class="fortune-rank-sign" style="display: block; writing-mode: horizontal-tb; width: 100%;">${sign}</div>
-        <div class="fortune-rank-preview" style="display: block; writing-mode: horizontal-tb; width: 100%; min-width: 200px; padding: 8px; box-sizing: border-box;">${previewText}</div>
-        <div class="fortune-rank-text" style="display: none; writing-mode: horizontal-tb; width: 100%;">${data.text}</div>
+        <div class="fortune-rank-text" style="display: block; writing-mode: horizontal-tb; width: 100%; white-space: pre-line !important; word-wrap: break-word; overflow-wrap: break-word; word-break: break-all;">${finalText}</div>
         <div class="fortune-rank-lucky" style="display: block; writing-mode: horizontal-tb; width: 100%; min-width: 200px;">
           🔮 ラッキーアイテム: ${data.lucky}
         </div>

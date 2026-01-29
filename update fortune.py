@@ -5,10 +5,12 @@ import re
 
 def get_ai_fortune():
     # 日本語性能が高いモデルを指定
-    API_URL = "https://api-inference.huggingface.co/models/google/gemma-2-9b-it"
+    API_URL = "https://router.huggingface.co"
     headers = {"Authorization": "Bearer Mood Calendar"}
     
-    prompt = """
+    payload = {
+        "model": "google/gemma-2-9b-it",
+        "inputs": """
 あなたは、世界で一番美しく、かつ鋭い的中率を誇る占星術師です。
 今日の12星座占いを生成してください。
 
@@ -21,17 +23,16 @@ def get_ai_fortune():
 3. 専門用語（例：ハウス、逆行、アスペクトなど）を1つ混ぜて、バーナム効果を活かした「本格的」な文章にすること。
 
 星座：牡羊座、金牛座、双子座、蟹座、獅子座、乙女座、天秤座、蠍座、射手座、山羊座、水瓶座、魚座
-"""
+""",
+        "parameters": {
+            "max_new_tokens": 1000,
+            "temperature": 0.8,
+            "return_full_text": False
+        }
+    }
     
     try:
-        response = requests.post(API_URL, headers=headers, json={
-            "inputs": prompt,
-            "parameters": {
-                "max_new_tokens": 1000,
-                "temperature": 0.8,
-                "return_full_text": False
-            }
-        })
+        response = requests.post(API_URL, headers=headers, json=payload)
         
         if response.status_code == 200:
             result = response.json()

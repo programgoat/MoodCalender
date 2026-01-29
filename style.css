@@ -1922,8 +1922,9 @@ body[data-theme="ruin"] .app {
   padding: 0;
   background: none;
   border: none;
-  max-height: 80vh;
-  overflow-y: auto;
+  max-height: none;
+  overflow-y: visible;
+  padding-right: 8px;
 }
 
 .fortune-rank-item,
@@ -1946,6 +1947,8 @@ body[data-theme="ruin"] .app {
   overflow: hidden;
   min-height: 120px;
   width: 100%;
+  box-sizing: border-box;
+  max-width: 100%;
 }
 
 .fortune-rank-item:hover {
@@ -1961,6 +1964,8 @@ body[data-theme="ruin"] .app {
   transform: translateY(-8px) scale(1.02);
   box-shadow: 0 12px 35px rgba(56, 189, 248, 0.3);
   z-index: 10;
+  min-height: 200px;
+  padding: 24px;
 }
 
 .fortune-rank-number {
@@ -2006,6 +2011,8 @@ body[data-theme="ruin"] .app {
   display: flex;
   flex-direction: column;
   justify-content: space-between;
+  max-width: calc(100% - 70px);
+  min-width: 0;
 }
 
 .fortune-rank-sign {
@@ -2032,16 +2039,16 @@ body[data-theme="ruin"] .app {
   color: var(--text-sub);
   line-height: 1.6;
   margin-bottom: 12px;
-  display: none;
-  white-space: normal;
-}
-
-.fortune-rank-item.expanded .fortune-rank-preview {
-  display: none;
-}
-
-.fortune-rank-item.expanded .fortune-rank-text {
   display: block;
+  white-space: pre-line !important;
+  word-wrap: break-word;
+  overflow-wrap: break-word;
+  word-break: break-all;
+  overflow-wrap: anywhere;
+  hyphens: auto;
+  width: 100%;
+  max-width: 100%;
+  box-sizing: border-box;
 }
 
 .fortune-rank-lucky {
@@ -2069,17 +2076,75 @@ body[data-theme="ruin"] .app {
 }
 
 .fortune-rank-item.expanded .fortune-rank-expand {
-  display: none;
+  display: none !important;
 }
 
-@media (max-width: 600px) {
+@media (max-width: 470px) {
   #ranking-container {
-    grid-template-columns: 1fr;
+    max-height: none;
     gap: 12px;
+    padding-right: 4px;
+  }
+  
+  .fortune-rank-item {
+    padding: 12px;
+    min-height: auto;
+    flex-wrap: wrap;
   }
   
   .fortune-rank-item.expanded {
-    grid-column: span 1;
+    min-height: auto;
+    padding: 16px;
+  }
+  
+  .fortune-rank-content {
+    margin-left: 40px;
+    max-width: calc(100% - 50px);
+    min-width: 0;
+    flex: 1;
+  }
+  
+  .fortune-rank-sign {
+    font-size: 14px;
+    margin-bottom: 8px;
+  }
+  
+  .fortune-rank-preview,
+  .fortune-rank-text {
+    font-size: 12px;
+    line-height: 1.4;
+    margin-bottom: 8px;
+    word-break: break-all;
+    overflow-wrap: anywhere;
+    hyphens: auto;
+    white-space: pre-line !important;
+  }
+  
+  .fortune-rank-lucky {
+    font-size: 11px;
+    padding: 4px;
+    margin-bottom: 8px;
+    word-break: break-all;
+    overflow-wrap: anywhere;
+  }
+  
+  .fortune-rank-expand {
+    font-size: 11px;
+    margin-bottom: 0;
+  }
+  
+  .fortune-rank-number {
+    width: 28px;
+    height: 28px;
+    font-size: 11px;
+    top: 8px;
+    left: 8px;
+  }
+  
+  .fortune-rank-number.rank-1,
+  .fortune-rank-number.rank-2,
+  .fortune-rank-number.rank-3 {
+    font-size: 13px;
   }
 }
 
