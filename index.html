@@ -42,6 +42,17 @@
     }
   </style>
   <script>
+  if ('serviceWorker' in navigator) {
+    window.addEventListener('load', () => {
+      // GitHub Pagesのパスに合わせて登録
+      navigator.serviceWorker.register('./sw.js', { scope: './' })
+        .then(reg => console.log('SW registered!', reg))
+        .catch(err => console.err('SW registration failed:', err));
+    });
+  }
+</script>
+
+  <script>
     // 強制的に横書きにするJavaScript
     document.addEventListener('DOMContentLoaded', function() {
       const allElements = document.querySelectorAll('*');
