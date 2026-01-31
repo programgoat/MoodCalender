@@ -517,14 +517,15 @@ body[data-theme="light"] .title-pill {
 .help-backdrop {
   position: fixed;
   inset: 0;
-  background: rgba(0,0,0,0.6);
+  background: rgba(0,0,0,0.8);
   display: flex;
   align-items: center;
   justify-content: center;
   z-index: 60;
   opacity: 0;
   pointer-events: none;
-  transition: 0.2s;
+  transition: 0.3s;
+  padding: 20px;
 }
 
 .help-backdrop.show {
@@ -535,48 +536,197 @@ body[data-theme="light"] .title-pill {
 .help-modal {
   background: var(--theme-card-bg);
   color: var(--text-main);
-  padding: 20px;
-  border-radius: 14px;
-  width: 90%;
-  max-width: 380px;
+  max-width: 800px;
+  width: 100%;
+  max-height: 90vh;
+  border-radius: 20px;
   border: 1px solid var(--theme-border);
-  animation: helpPop 0.25s ease-out;
+  padding: 0;
+  overflow: hidden;
+  position: relative;
+  animation: helpPop 0.3s ease-out;
+  box-shadow: 0 25px 50px rgba(15, 23, 42, 0.9);
 }
 
-.help-modal h2 {
-  margin-top: 0;
+.help-close-btn {
+  position: absolute;
+  top: 16px;
+  right: 16px;
+  background: rgba(255, 255, 255, 0.1);
+  border: 1px solid rgba(255, 255, 255, 0.2);
+  color: var(--text-sub);
+  width: 32px;
+  height: 32px;
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  cursor: pointer;
+  font-size: 18px;
+  font-weight: bold;
+  transition: all 0.2s ease;
+  z-index: 10;
+}
+
+.help-close-btn:hover {
+  background: rgba(255, 255, 255, 0.2);
   color: var(--text-main);
+  transform: scale(1.1);
 }
 
-.help-modal ul {
+.help-content {
+  padding: 24px;
+  max-height: calc(90vh - 48px);
+  overflow-y: auto;
+  scrollbar-width: thin;
+  scrollbar-color: var(--accent) transparent;
+}
+
+.help-content::-webkit-scrollbar {
+  width: 8px;
+}
+
+.help-content::-webkit-scrollbar-track {
+  background: rgba(255, 255, 255, 0.1);
+  border-radius: 4px;
+}
+
+.help-content::-webkit-scrollbar-thumb {
+  background: var(--accent);
+  border-radius: 4px;
+}
+
+.help-content h2 {
+  margin: 0 0 20px 0;
+  font-size: 24px;
+  font-weight: 600;
+  color: var(--text-main);
+  text-align: center;
+  padding-bottom: 16px;
+  border-bottom: 2px solid var(--accent);
+}
+
+.help-section {
+  margin-bottom: 24px;
+}
+
+.help-section h3 {
+  margin: 0 0 16px 0;
+  font-size: 18px;
+  font-weight: 600;
+  color: var(--accent);
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+
+.help-item {
+  display: flex;
+  align-items: flex-start;
+  gap: 12px;
+  margin-bottom: 12px;
+  padding: 12px;
+  background: rgba(56, 189, 248, 0.05);
+  border-radius: 12px;
+  border-left: 3px solid var(--accent);
+  transition: all 0.2s ease;
+}
+
+.help-item:hover {
+  background: rgba(56, 189, 248, 0.1);
+  transform: translateX(4px);
+}
+
+.help-icon {
+  font-size: 20px;
+  flex-shrink: 0;
+  width: 32px;
+  height: 32px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background: var(--theme-accent-soft);
+  border-radius: 8px;
+  border: 1px solid var(--accent);
+}
+
+.help-text {
+  flex: 1;
+  line-height: 1.5;
+}
+
+.help-text strong {
+  color: var(--accent);
+  font-weight: 600;
+}
+
+.help-tips {
+  margin-top: 24px;
+  padding: 16px;
+  background: rgba(124, 58, 237, 0.1);
+  border-radius: 12px;
+  border: 1px solid rgba(124, 58, 237, 0.3);
+}
+
+.help-tips h4 {
+  margin: 0 0 12px 0;
+  font-size: 16px;
+  font-weight: 600;
+  color: var(--accent);
+}
+
+.help-tips ul {
+  margin: 0;
   padding-left: 20px;
   color: var(--text-main);
 }
 
-.help-modal li {
+.help-tips li {
   margin-bottom: 8px;
-  color: var(--text-sub);
+  line-height: 1.5;
 }
 
 @keyframes helpPop {
-  0% { transform: scale(0.8); opacity: 0; }
-  100% { transform: scale(1); opacity: 1; }
+  0% { 
+    transform: scale(0.9); 
+    opacity: 0; 
+  }
+  100% { 
+    transform: scale(1); 
+    opacity: 1; 
+  }
 }
 
-.help-close {
-  margin-top: 12px;
-  padding: 6px 12px;
-  border-radius: 8px;
-  border: 1px solid var(--accent);
-  background: var(--theme-accent-soft);
-  color: var(--accent);
-  cursor: pointer;
-  transition: 0.2s;
-  font-weight: 600;
-}
-
-.help-close:hover {
-  transform: scale(1.05);
+/* モバイル対応 */
+@media (max-width: 600px) {
+  .help-modal {
+    margin: 10px;
+    border-radius: 16px;
+  }
+  
+  .help-content {
+    padding: 16px;
+  }
+  
+  .help-content h2 {
+    font-size: 20px;
+  }
+  
+  .help-section h3 {
+    font-size: 16px;
+  }
+  
+  .help-item {
+    flex-direction: column;
+    gap: 8px;
+    padding: 8px;
+  }
+  
+  .help-icon {
+    width: 28px;
+    height: 28px;
+    font-size: 16px;
+  }
 }
 
 /* ===========================
@@ -1107,6 +1257,367 @@ textarea::placeholder {
   font-size: 14px;
   min-width: 100px;
   text-align: center;
+}
+
+/* ===========================
+   目標機能
+=========================== */
+
+.goal-display {
+  background: var(--theme-card-bg);
+  border: 1px solid var(--theme-border);
+  border-radius: 8px;
+  padding: 12px;
+  margin-bottom: 12px;
+}
+
+.goal-content {
+  margin-bottom: 12px;
+}
+
+.goal-text {
+  font-size: 14px;
+  font-weight: 500;
+  color: var(--text-main);
+  line-height: 1.5;
+  margin-bottom: 8px;
+}
+
+.goal-empty {
+  color: var(--text-sub);
+  font-style: italic;
+}
+
+.goal-meta {
+  display: flex;
+  justify-content: flex-end;
+}
+
+.goal-registration-time {
+  font-size: 11px;
+  color: var(--text-sub);
+  background: rgba(56, 189, 248, 0.1);
+  padding: 2px 6px;
+  border-radius: 4px;
+}
+
+.goal-actions {
+  display: flex;
+  gap: 8px;
+}
+
+/* 目標モーダル */
+.goal-backdrop {
+  position: fixed;
+  inset: 0;
+  background: rgba(15, 23, 42, 0.7);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  z-index: 50;
+  opacity: 0;
+  pointer-events: none;
+  transition: opacity 0.18s ease-out;
+}
+
+.goal-backdrop.show {
+  opacity: 1;
+  pointer-events: auto;
+}
+
+.goal-modal {
+  width: 100%;
+  max-width: 420px;
+  background: var(--theme-card-bg);
+  border-radius: 18px;
+  border: 1px solid var(--theme-border);
+  box-shadow: 0 18px 45px rgba(15, 23, 42, 0.95);
+  padding: 14px 14px 12px;
+  transform: translateY(20px) scale(0.95);
+  transition: 0.25s ease-out;
+}
+
+.goal-backdrop.show .goal-modal {
+  transform: translateY(0) scale(1);
+}
+
+.goal-modal-header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  margin-bottom: 12px;
+}
+
+.goal-modal-title {
+  font-size: 16px;
+  font-weight: 600;
+  color: var(--text-main);
+}
+
+.goal-modal-subtitle {
+  font-size: 12px;
+  color: var(--text-sub);
+  margin-top: 2px;
+}
+
+.goal-modal-close {
+  background: none;
+  border: none;
+  color: var(--text-sub);
+  font-size: 24px;
+  cursor: pointer;
+  transition: 0.2s;
+}
+
+.goal-modal-close:hover {
+  color: var(--text-main);
+  transform: scale(1.1);
+}
+
+.goal-textarea-label {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 6px;
+  font-size: 12px;
+  color: var(--text-sub);
+}
+
+.goal-modal-actions {
+  display: flex;
+  gap: 8px;
+}
+
+/* 目標達成モーダル */
+.goal-achievement-backdrop {
+  position: fixed;
+  inset: 0;
+  background: rgba(15, 23, 42, 0.7);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  z-index: 50;
+  opacity: 0;
+  pointer-events: none;
+  transition: opacity 0.18s ease-out;
+}
+
+.goal-achievement-backdrop.show {
+  opacity: 1;
+  pointer-events: auto;
+}
+
+.goal-achievement-modal {
+  width: 100%;
+  max-width: 420px;
+  background: var(--theme-card-bg);
+  border-radius: 18px;
+  border: 1px solid var(--theme-border);
+  box-shadow: 0 18px 45px rgba(15, 23, 42, 0.95);
+  padding: 16px;
+  transform: translateY(20px) scale(0.95);
+  transition: 0.25s ease-out;
+  max-height: 80vh;
+  overflow-y: auto;
+}
+
+.goal-achievement-backdrop.show .goal-achievement-modal {
+  transform: translateY(0) scale(1);
+}
+
+.goal-achievement-header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  margin-bottom: 16px;
+}
+
+.goal-achievement-title {
+  font-size: 18px;
+  font-weight: 600;
+  color: var(--text-main);
+}
+
+.goal-achievement-subtitle {
+  font-size: 12px;
+  color: var(--text-sub);
+  margin-top: 2px;
+}
+
+.goal-achievement-close {
+  background: none;
+  border: none;
+  color: var(--text-sub);
+  font-size: 24px;
+  cursor: pointer;
+  transition: 0.2s;
+}
+
+.goal-achievement-close:hover {
+  color: var(--text-main);
+  transform: scale(1.1);
+}
+
+.goal-achievement-content {
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
+}
+
+.today-goal-text {
+  font-size: 14px;
+  color: var(--text-main);
+  line-height: 1.5;
+  padding: 12px;
+  background: rgba(56, 189, 248, 0.1);
+  border-radius: 8px;
+  border-left: 4px solid var(--accent);
+}
+
+.today-goal-empty {
+  color: var(--text-sub);
+  font-style: italic;
+  text-align: center;
+  padding: 20px;
+}
+
+.goal-achievement-question {
+  text-align: center;
+}
+
+.goal-achievement-question label {
+  display: block;
+  font-size: 14px;
+  font-weight: 500;
+  color: var(--text-main);
+  margin-bottom: 12px;
+}
+
+.goal-achievement-options {
+  display: flex;
+  gap: 12px;
+  justify-content: center;
+}
+
+.goal-achievement-btn {
+  flex: 1;
+  padding: 12px 16px;
+  border-radius: 8px;
+  border: 2px solid var(--theme-border);
+  background: var(--theme-card-bg);
+  color: var(--text-sub);
+  font-size: 14px;
+  font-weight: 500;
+  cursor: pointer;
+  transition: 0.2s;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 6px;
+}
+
+.goal-achievement-btn:hover {
+  transform: scale(1.02);
+  border-color: var(--accent);
+}
+
+.goal-achievement-btn.active {
+  border-color: var(--accent);
+  background: var(--theme-accent-soft);
+  color: var(--accent);
+}
+
+.goal-achievement-actions {
+  display: flex;
+  gap: 8px;
+}
+
+/* 日付詳細 */
+.day-details {
+  margin-top: 12px;
+  padding-top: 12px;
+  border-top: 1px solid var(--theme-border);
+}
+
+.day-goal-item {
+  margin-bottom: 8px;
+  padding: 8px;
+  background: rgba(56, 189, 248, 0.1);
+  border-radius: 6px;
+  border-left: 3px solid var(--accent);
+}
+
+.day-goal-empty {
+  color: var(--text-sub);
+  font-style: italic;
+  font-size: 12px;
+}
+
+.goal-status {
+  font-size: 12px;
+  font-weight: 500;
+  margin-top: 4px;
+}
+
+.goal-registration-info {
+  font-size: 11px;
+  color: var(--text-sub);
+  margin-top: 2px;
+}
+
+.day-blowaway-item {
+  margin-bottom: 8px;
+  padding: 8px;
+  background: rgba(249, 115, 115, 0.1);
+  border-radius: 6px;
+  border-left: 3px solid var(--danger);
+  font-size: 12px;
+}
+
+.day-blowaway-empty {
+  color: var(--text-sub);
+  font-style: italic;
+  font-size: 12px;
+}
+
+.reflection-actions {
+  margin-top: 12px;
+  padding-top: 12px;
+  border-top: 1px solid var(--theme-border);
+}
+
+/* カレンダーインジケーター */
+.day-goal-indicator {
+  position: absolute;
+  top: 2px;
+  right: 2px;
+  font-size: 10px;
+  z-index: 2;
+}
+
+.day-goal-indicator.goal-achieved {
+  color: #4ade80;
+}
+
+.day-goal-indicator.goal-not-achieved {
+  color: #f97373;
+}
+
+.day-goal-indicator.goal-pending {
+  color: #fbbf24;
+}
+
+.day-blowaway-indicator {
+  position: absolute;
+  bottom: 2px;
+  right: 2px;
+  background: var(--danger);
+  color: white;
+  font-size: 9px;
+  font-weight: bold;
+  padding: 1px 3px;
+  border-radius: 3px;
+  z-index: 2;
 }
 
 /* ===========================

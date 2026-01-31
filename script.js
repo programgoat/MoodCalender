@@ -180,6 +180,22 @@ function saveEntries(entries) {
   localStorage.setItem("moodEntries", JSON.stringify(entries));
 }
 
+function loadGoals() {
+  return JSON.parse(localStorage.getItem("goals") || "{}");
+}
+
+function saveGoals(goals) {
+  localStorage.setItem("goals", JSON.stringify(goals));
+}
+
+function loadBlowAwayCounts() {
+  return JSON.parse(localStorage.getItem("blowAwayCounts") || "{}");
+}
+
+function saveBlowAwayCounts(counts) {
+  localStorage.setItem("blowAwayCounts", JSON.stringify(counts));
+}
+
 /* ---------------------------
    UI要素取得
 --------------------------- */
@@ -197,6 +213,11 @@ const clearBtn = document.getElementById("clear-btn");
 
 const selectedDayInfo = document.getElementById("selected-day-info");
 const selectedNoteBox = document.getElementById("selected-note-box");
+const dayDetails = document.getElementById("day-details");
+const dayGoalInfo = document.getElementById("day-goal-info");
+const dayBlowAwayInfo = document.getElementById("day-blowaway-info");
+const reflectionActions = document.getElementById("reflection-actions");
+const reflectionBtn = document.getElementById("reflection-btn");
 
 const graphEl = document.getElementById("graph");
 const graphLabelsEl = document.getElementById("graph-labels");
@@ -213,6 +234,21 @@ const analysisClose = document.getElementById("analysis-close");
 const badThingsEl = document.getElementById("bad-things");
 const blowAwayBtn = document.getElementById("blow-away-btn");
 const effectContainer = document.getElementById("effect-container");
+
+const goalDisplay = document.getElementById("goal-display");
+const goalContent = document.getElementById("goal-content");
+const editGoalBtn = document.getElementById("edit-goal-btn");
+const goalBackdrop = document.getElementById("goal-backdrop");
+const goalModalClose = document.getElementById("goal-modal-close");
+const goalText = document.getElementById("goal-text");
+const goalCharCount = document.getElementById("goal-char-count");
+const goalSaveBtn = document.getElementById("goal-save-btn");
+const goalClearBtn = document.getElementById("goal-clear-btn");
+const goalAchievementBackdrop = document.getElementById("goal-achievement-backdrop");
+const goalAchievementClose = document.getElementById("goal-achievement-close");
+const todayGoalDisplay = document.getElementById("today-goal-display");
+const goalAchievementSaveBtn = document.getElementById("goal-achievement-save-btn");
+const goalAchievementSkipBtn = document.getElementById("goal-achievement-skip-btn");
 
 /* ---------------------------
    状態
@@ -246,6 +282,8 @@ function renderCalendar() {
   const totalDays = lastDay.getDate();
 
   const entries = loadEntries();
+  const goals = loadGoals();
+  const blowAwayCounts = loadBlowAwayCounts();
   const today = new Date();
 
   // 空白
@@ -276,6 +314,31 @@ function renderCalendar() {
       label.className = "day-mood-label";
       label.textContent = entries[key].label;
       cell.appendChild(label);
+    }
+
+    // 目標インジケーター
+    if (goals[key]) {
+      const indicator = document.createElement("div");
+      indicator.className = "day-goal-indicator";
+      if (goals[key].achieved === true) {
+        indicator.classList.add("goal-achieved");
+        indicator.textContent = "✅";
+      } else if (goals[key].achieved === false) {
+        indicator.classList.add("goal-not-achieved");
+        indicator.textContent = "❌";
+      } else {
+        indicator.classList.add("goal-pending");
+        indicator.textContent = "🎯";
+      }
+      cell.appendChild(indicator);
+    }
+
+    // 嫌なことを飛ばした回数インジケーター
+    if (blowAwayCounts[key] && blowAwayCounts[key] > 0) {
+      const indicator = document.createElement("div");
+      indicator.className = "day-blowaway-indicator";
+      indicator.textContent = blowAwayCounts[key];
+      cell.appendChild(indicator);
     }
 
     const num = document.createElement("div");
@@ -334,11 +397,17 @@ function updateSelectedDayDisplay() {
   if (!selectedDate) {
     selectedDayInfo.textContent = "まだ日付が選択されていません。";
     selectedNoteBox.innerHTML = `<span class="note-empty">メモはまだありません。</span>`;
+    dayDetails.style.display = "none";
+    reflectionActions.style.display = "none";
     return;
   }
 
   const key = formatDateKey(selectedDate);
   const entries = loadEntries();
+  const goals = loadGoals();
+  const blowAwayCounts = loadBlowAwayCounts();
+  const today = new Date();
+  const isToday = sameDay(selectedDate, today);
 
   selectedDayInfo.textContent = `${selectedDate.getFullYear()}年 ${
     selectedDate.getMonth() + 1
@@ -348,6 +417,51 @@ function updateSelectedDayDisplay() {
     selectedNoteBox.textContent = entries[key].note || "（メモなし）";
   } else {
     selectedNoteBox.innerHTML = `<span class="note-empty">メモはまだありません。</span>`;
+  }
+
+  // 目標と嫌なことを飛ばした回数を表示
+  let goalInfo = '';
+  let blowAwayInfo = '';
+
+  // 目標情報を表示
+  if (goals[key]) {
+    const achievedStatus = goals[key].achieved !== undefined ? 
+      (goals[key].achieved ? '✅ 達成' : '❌ 未達成') : 
+      '⏳ 記録待ち';
+    
+    goalInfo = `
+      <div class="day-goal-item">
+        <strong>目標:</strong> ${goals[key].text}
+        <div class="goal-status">${achievedStatus}</div>
+        <div class="goal-registration-info">
+          ${goals[key].registeredOn === key ? '当日登録' : '前日登録'}
+        </div>
+      </div>
+    `;
+  } else {
+    goalInfo = '<div class="day-goal-empty">目標はありません</div>';
+  }
+
+  // 嫌なことを飛ばした回数を表示
+  if (blowAwayCounts[key] && blowAwayCounts[key] > 0) {
+    blowAwayInfo = `
+      <div class="day-blowaway-item">
+        <strong>💨 嫌なことを飛ばした回数:</strong> ${blowAwayCounts[key]}回
+      </div>
+    `;
+  } else {
+    blowAwayInfo = '<div class="day-blowaway-empty">嫌なことを飛ばした記録はありません</div>';
+  }
+
+  dayGoalInfo.innerHTML = goalInfo;
+  dayBlowAwayInfo.innerHTML = blowAwayInfo;
+  dayDetails.style.display = "block";
+
+  // 今日の場合は振り返りボタンを表示
+  if (isToday) {
+    reflectionActions.style.display = "block";
+  } else {
+    reflectionActions.style.display = "none";
   }
 }
 
@@ -608,22 +722,6 @@ function displayError(container) {
     ">
       <div style="font-size: 48px; margin-bottom: 16px;">🔮</div>
       <div style="font-weight: 600; margin-bottom: 8px;">占いデータの読み込みに失敗しました</div>
-      <div style="font-size: 14px;">後でもう一度お試しください</div>
-    </div>
-  `;
-}
-
-function init() {
-  const today = new Date();
-  todayLabel.textContent = `${today.getMonth() + 1}月${today.getDate()}日`;
-
-  renderCalendar();
-  initNavigation();
-  initRecordPage();
-  initSettingsPage();
-  initFortunePage();
-}
-
 /* ---------------------------
    分析モーダル
 --------------------------- */
@@ -719,6 +817,13 @@ function destroyBadThings() {
     alert("嫌なことを書いてから飛ばしてください！");
     return;
   }
+
+  // Track blow-away count
+  const today = new Date();
+  const todayKey = formatDateKey(today);
+  const blowAwayCounts = loadBlowAwayCounts();
+  blowAwayCounts[todayKey] = (blowAwayCounts[todayKey] || 0) + 1;
+  saveBlowAwayCounts(blowAwayCounts);
 
   // ランダムに3つの効果から1つを選ぶ
   const effects = ["rocket", "blast", "shredder"];
@@ -932,6 +1037,184 @@ function createShredderEffect(centerX, centerY) {
 }
 
 blowAwayBtn.addEventListener("click", destroyBadThings);
+
+/* ---------------------------
+   目標機能
+--------------------------- */
+let selectedGoalAchievement = null;
+
+function updateGoalDisplay() {
+  const tomorrow = new Date();
+  tomorrow.setDate(tomorrow.getDate() + 1);
+  const tomorrowKey = formatDateKey(tomorrow);
+  const goals = loadGoals();
+  
+  if (goals[tomorrowKey]) {
+    goalContent.innerHTML = `
+      <div class="goal-text">${goals[tomorrowKey].text}</div>
+      <div class="goal-meta">
+        <span class="goal-registration-time">
+          ${goals[tomorrowKey].registeredOn === formatDateKey(new Date()) ? 
+            '今日登録' : '昨日登録'}
+        </span>
+      </div>
+    `;
+    editGoalBtn.textContent = '目標を変更';
+  } else {
+    goalContent.innerHTML = '<div class="goal-empty">明日の目標はまだ設定されていません。</div>';
+    editGoalBtn.textContent = '目標を設定';
+  }
+}
+
+function openGoalModal() {
+  const tomorrow = new Date();
+  tomorrow.setDate(tomorrow.getDate() + 1);
+  const tomorrowKey = formatDateKey(tomorrow);
+  const goals = loadGoals();
+  
+  if (goals[tomorrowKey]) {
+    goalText.value = goals[tomorrowKey].text;
+    goalCharCount.textContent = `${goalText.value.length} / 200`;
+  } else {
+    goalText.value = '';
+    goalCharCount.textContent = '0 / 200';
+  }
+  
+  goalBackdrop.classList.add("show");
+}
+
+function closeGoalModal() {
+  goalBackdrop.classList.remove("show");
+}
+
+function saveGoal() {
+  const goalTextValue = goalText.value.trim();
+  if (!goalTextValue) {
+    alert('目標を入力してください');
+    return;
+  }
+  
+  const tomorrow = new Date();
+  tomorrow.setDate(tomorrow.getDate() + 1);
+  const tomorrowKey = formatDateKey(tomorrow);
+  const goals = loadGoals();
+  
+  goals[tomorrowKey] = {
+    text: goalTextValue,
+    registeredOn: formatDateKey(new Date()),
+    createdAt: new Date().toISOString()
+  };
+  
+  saveGoals(goals);
+  closeGoalModal();
+  updateGoalDisplay();
+}
+
+function clearGoal() {
+  goalText.value = '';
+  goalCharCount.textContent = '0 / 200';
+}
+
+function updateGoalAchievementDisplay() {
+  const today = new Date();
+  const todayKey = formatDateKey(today);
+  const yesterday = new Date(today);
+  yesterday.setDate(yesterday.getDate() - 1);
+  const yesterdayKey = formatDateKey(yesterday);
+  const goals = loadGoals();
+  
+  if (goals[yesterdayKey]) {
+    todayGoalDisplay.innerHTML = `
+      <div class="today-goal-text">
+        <strong>昨日設定した目標:</strong><br>
+        ${goals[yesterdayKey].text}
+      </div>
+    `;
+  } else {
+    todayGoalDisplay.innerHTML = `
+      <div class="today-goal-empty">
+        昨日設定された目標はありません。
+      </div>
+    `;
+  }
+}
+
+function openGoalAchievementModal() {
+  updateGoalAchievementDisplay();
+  selectedGoalAchievement = null;
+  
+  // Reset achievement buttons
+  document.querySelectorAll('.goal-achievement-btn').forEach(btn => {
+    btn.classList.remove('active');
+  });
+  goalAchievementSaveBtn.disabled = true;
+  
+  goalAchievementBackdrop.classList.add("show");
+}
+
+function closeGoalAchievementModal() {
+  goalAchievementBackdrop.classList.remove("show");
+}
+
+function saveGoalAchievement() {
+  const today = new Date();
+  const todayKey = formatDateKey(today);
+  const yesterday = new Date(today);
+  yesterday.setDate(yesterday.getDate() - 1);
+  const yesterdayKey = formatDateKey(yesterday);
+  const goals = loadGoals();
+  
+  if (goals[yesterdayKey] && selectedGoalAchievement !== null) {
+    goals[yesterdayKey].achieved = selectedGoalAchievement;
+    goals[yesterdayKey].achievedOn = todayKey;
+    saveGoals(goals);
+  }
+  
+  closeGoalAchievementModal();
+}
+
+// Goal event listeners
+editGoalBtn.addEventListener("click", openGoalModal);
+goalModalClose.addEventListener("click", closeGoalModal);
+goalBackdrop.addEventListener("click", (e) => {
+  if (e.target === goalBackdrop) closeGoalModal();
+});
+
+goalText.addEventListener("input", () => {
+  goalCharCount.textContent = `${goalText.value.length} / 200`;
+});
+
+goalSaveBtn.addEventListener("click", saveGoal);
+goalClearBtn.addEventListener("click", clearGoal);
+
+goalAchievementClose.addEventListener("click", closeGoalAchievementModal);
+goalAchievementBackdrop.addEventListener("click", (e) => {
+  if (e.target === goalAchievementBackdrop) closeGoalAchievementModal();
+});
+
+goalAchievementSaveBtn.addEventListener("click", saveGoalAchievement);
+goalAchievementSkipBtn.addEventListener("click", closeGoalAchievementModal);
+
+document.querySelectorAll('.goal-achievement-btn').forEach(btn => {
+  btn.addEventListener('click', () => {
+    document.querySelectorAll('.goal-achievement-btn').forEach(b => b.classList.remove('active'));
+    btn.classList.add('active');
+    selectedGoalAchievement = btn.dataset.achieved === 'true';
+    goalAchievementSaveBtn.disabled = false;
+  });
+});
+
+function init() {
+  const today = new Date();
+  todayLabel.textContent = `${today.getMonth() + 1}月${today.getDate()}日`;
+
+  renderCalendar();
+  initNavigation();
+  initRecordPage();
+  initSettingsPage();
+  initFortunePage();
+  updateGoalDisplay();
+}
 
 init();
 /* ===========================

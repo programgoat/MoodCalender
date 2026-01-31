@@ -87,7 +87,7 @@
             <div>
               <div class="title-text-main">
                 Mood Calendar
-                <span class="title-pill">v4.5.1</span>
+                <span class="title-pill">v4.6.0</span>
               </div>
               <div class="title-text-sub">
                 カレンダーで、1日の気分と良かったことを記録しよう。良かったことはカレンダーに、悪いことは消し去ってカタルシスを得よう！
@@ -179,6 +179,39 @@
           </div>
           <div class="note-box" id="selected-note-box">
             <span class="note-empty">良かったことはまだありません。</span>
+          </div>
+          
+          <div class="day-details" id="day-details" style="display: none;">
+            <div class="day-goal-info" id="day-goal-info">
+              <!-- 目標情報が表示される -->
+            </div>
+            <div class="day-blowaway-info" id="day-blowaway-info">
+              <!-- 嫌なことを飛ばした回数が表示される -->
+            </div>
+          </div>
+          
+          <div class="reflection-actions" id="reflection-actions" style="display: none;">
+            <button class="btn-secondary" id="reflection-btn">今日の振り返り</button>
+          </div>
+        </section>
+
+        <section class="card">
+          <div class="card-header">
+            <div>
+              <div class="card-title">明日の目標</div>
+              <div class="card-subtitle">
+                明日の目標を設定しましょう。
+              </div>
+            </div>
+          </div>
+
+          <div class="goal-display" id="goal-display">
+            <div class="goal-content" id="goal-content">
+              <div class="goal-empty">明日の目標はまだ設定されていません。</div>
+            </div>
+            <div class="goal-actions">
+              <button class="btn-secondary" id="edit-goal-btn">目標を設定</button>
+            </div>
           </div>
         </section>
 
@@ -405,14 +438,131 @@
   <!-- ▼▼▼ 使い方モーダル ▼▼▼ -->
   <div class="help-backdrop" id="help-backdrop">
     <div class="help-modal">
-      <h2>使い方ガイド</h2>
-      <ul>
-        <li>日付をタップすると気分を登録できます。</li>
-        <li>今日だけ編集できます。翌日以降は閲覧のみ。</li>
-        <li>データはブラウザに保存されます。</li>
-        <li>スマホとPCでUIが自動調整されます。</li>
-      </ul>
-      <button id="help-close" class="help-close">閉じる</button>
+      <button class="help-close-btn" id="help-close">×</button>
+      
+      <div class="help-content">
+        <h2>📖 MoodCalendar 使い方ガイド</h2>
+        
+        <div class="help-section">
+          <h3>📅 基本的な使い方</h3>
+          <div class="help-item">
+            <span class="help-icon">1️⃣</span>
+            <div class="help-text">
+              <strong>気分記録</strong>: カレンダーの日付をタップして、その日の気分と出来事を記録できます。今日のみ編集可能です。
+            </div>
+          </div>
+          <div class="help-item">
+            <span class="help-icon">2️⃣</span>
+            <div class="help-text">
+              <strong>月移動</strong>: 「前の月」「次の月」ボタンでカレンダーを移動できます。
+            </div>
+          </div>
+          <div class="help-item">
+            <span class="help-icon">3️⃣</span>
+            <div class="help-text">
+              <strong>詳細表示</strong>: 日付をクリックすると、その日の詳細情報（気分、メモ、目標など）が表示されます。
+            </div>
+          </div>
+        </div>
+
+        <div class="help-section">
+          <h3>🎯 明日の目標機能</h3>
+          <div class="help-item">
+            <span class="help-icon">📝</span>
+            <div class="help-text">
+              <strong>目標設定</strong>: 「明日の目標」セクションで明日の目標を設定できます。前日でも当日でも変更可能です。
+            </div>
+          </div>
+          <div class="help-item">
+            <span class="help-icon">📅</span>
+            <div class="help-text">
+              <strong>カレンダー表示</strong>: 目標がある日は🎯マークが表示されます。達成状況で✅❌に変化します。
+            </div>
+          </div>
+          <div class="help-item">
+            <span class="help-icon">🔄</span>
+            <div class="help-text">
+              <strong>振り返り</strong>: 今日を選択すると「今日の振り返り」ボタンが表示され、昨日の目標達成を記録できます。
+            </div>
+          </div>
+        </div>
+
+        <div class="help-section">
+          <h3>💨 嫌なことを飛ばす</h3>
+          <div class="help-item">
+            <span class="help-icon">✍️</span>
+            <div class="help-text">
+              <strong>入力</strong>: テキストエリアに嫌なことを書き込みます。
+            </div>
+          </div>
+          <div class="help-item">
+            <span class="help-icon">🚀</span>
+            <div class="help-text">
+              <strong>実行</strong>: 「嫌なことを飛ばす」ボタンで派手なエフェクトと共にテキストが消去されます。
+            </div>
+          </div>
+          <div class="help-item">
+            <span class="help-icon">📊</span>
+            <div class="help-text">
+              <strong>記録</strong>: 使用回数がカレンダーに🔢マークで表示され、クリックで詳細確認できます。
+            </div>
+          </div>
+        </div>
+
+        <div class="help-section">
+          <h3>📊 データ管理</h3>
+          <div class="help-item">
+            <span class="help-icon">💾</span>
+            <div class="help-text">
+              <strong>自動保存</strong>: すべてのデータは自動的にブラウザに保存されます。
+            </div>
+          </div>
+          <div class="help-item">
+            <span class="help-icon">🔒</span>
+            <div class="help-text">
+              <strong>プライバシー</strong>: データはこのブラウザのみに保存され、サーバーには送信されません。
+            </div>
+          </div>
+          <div class="help-item">
+            <span class="help-icon">📱</span>
+            <div class="help-text">
+              <strong>エクスポート</strong>: 設定画面からデータをJSONファイルとして出力できます。
+            </div>
+          </div>
+        </div>
+
+        <div class="help-section">
+          <h3>🎨 その他機能</h3>
+          <div class="help-item">
+            <span class="help-icon">📈</span>
+            <div class="help-text">
+              <strong>分析</strong>: 「分析」ボタンで気分の推移や分布をグラフで確認できます。
+            </div>
+          </div>
+          <div class="help-item">
+            <span class="help-icon">🔮</span>
+            <div class="help-text">
+              <strong>占い</strong>: 占いページで今日の運勢をチェックできます。
+            </div>
+          </div>
+          <div class="help-item">
+            <span class="help-icon">🎨</span>
+            <div class="help-text">
+              <strong>テーマ</strong>: 🎨ボタンでアプリのカラーテーマを変更できます。
+            </div>
+          </div>
+        </div>
+
+        <div class="help-tips">
+          <h4>💡 ヒント</h4>
+          <ul>
+            <li>毎日の目標設定でモチベーション維持</li>
+            <li>嫌なことは溜めずにその日のうちに処理</li>
+            <li>気分の推移を分析して自分を理解</li>
+            <li>定期的にデータをエクスポートしてバックアップ</li>
+          </ul>
+        </div>
+      </div>
     </div>
   </div>
   <!-- ▲▲▲ 使い方モーダル ▲▲▲ -->
@@ -457,6 +607,72 @@
     </div>
   </div>
   <!-- ▲▲▲ テーマ選択モーダル ▲▲▲ -->
+
+  <!-- ▼▼▼ モーダル：目標入力 ▼▼▼ -->
+  <div class="goal-backdrop" id="goal-backdrop">
+    <div class="goal-modal">
+      <div class="goal-modal-header">
+        <div>
+          <div class="goal-modal-title" id="goal-modal-title">明日の目標を設定</div>
+          <div class="goal-modal-subtitle">
+            明日の目標を入力してください。
+          </div>
+        </div>
+        <button class="goal-modal-close" id="goal-modal-close">×</button>
+      </div>
+
+      <div class="goal-textarea-label">
+        <span>明日の目標</span>
+        <span id="goal-char-count">0 / 200</span>
+      </div>
+      <textarea id="goal-text" maxlength="200" placeholder="明日の目標を入力してください..."></textarea>
+
+      <div class="goal-modal-actions">
+        <button class="btn-secondary" id="goal-clear-btn">クリア</button>
+        <button class="btn-primary" id="goal-save-btn"><span>➤</span>保存</button>
+      </div>
+    </div>
+  </div>
+  <!-- ▲▲▲ モーダル：目標入力 ▲▲▲ -->
+
+  <!-- ▼▼▼ モーダル：目標達成記録 ▼▼▼ -->
+  <div class="goal-achievement-backdrop" id="goal-achievement-backdrop">
+    <div class="goal-achievement-modal">
+      <div class="goal-achievement-header">
+        <div>
+          <div class="goal-achievement-title">今日の振り返り</div>
+          <div class="goal-achievement-subtitle">
+            今日の目標達成を記録しましょう。
+          </div>
+        </div>
+        <button class="goal-achievement-close" id="goal-achievement-close">×</button>
+      </div>
+
+      <div class="goal-achievement-content">
+        <div class="today-goal-display" id="today-goal-display">
+          <!-- 今日の目標が表示される -->
+        </div>
+        
+        <div class="goal-achievement-question">
+          <label>この目標を達成できましたか？</label>
+          <div class="goal-achievement-options">
+            <button class="goal-achievement-btn" data-achieved="true">
+              <span>✅</span>達成できた
+            </button>
+            <button class="goal-achievement-btn" data-achieved="false">
+              <span>❌</span>達成できなかった
+            </button>
+          </div>
+        </div>
+      </div>
+
+      <div class="goal-achievement-actions">
+        <button class="btn-secondary" id="goal-achievement-skip-btn">スキップ</button>
+        <button class="btn-primary" id="goal-achievement-save-btn" disabled><span>➤</span>記録</button>
+      </div>
+    </div>
+  </div>
+  <!-- ▲▲▲ モーダル：目標達成記録 ▲▲▲ -->
 
   <!-- エフェクト用コンテナ -->
   <div id="effect-container"></div>
