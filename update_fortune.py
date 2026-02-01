@@ -7,7 +7,7 @@ import datetime
 def get_ai_fortune():
     # 日本語性能が高いモデルを指定
     MODEL_ID = "google/gemma-2-9b-it" # モデルIDを定義
-    API_URL = f"https://router.huggingface.co{MODEL_ID}" # 新しいURLに変更
+    API_URL = f"https://router.huggingface.co/hf-inference/models/{MODEL_ID}" # 新しいURLに変更
     hf_token = os.getenv("HF_TOKEN")
     if not hf_token:
         print("Error: HF_TOKEN environment variable not set.")
