@@ -1,72 +1,10 @@
-import requests
 import os
+import requests
 import json
 import re
 import datetime
 
-def get_ai_fortune():
-    # 日本語性能が高いモデルを指定
-    MODEL_ID = "google/gemma-2-9b-it" # モデルIDを定義
-    API_URL = "https://router.huggingface.co/v1/chat/completions"
-    hf_token = os.getenv("HF_TOKEN")
-    if not hf_token:
-        print("Error: HF_TOKEN environment variable not set.")
-        # トークンがない場合はNoneを返し、後続処理でフォールバックさせる
-        return None 
-
-    headers = {"Authorization": f"Bearer {hf_token}"} # ★このように変更！
-    
-    #今日の日付を指定してプロンプトに含める
-    today = datetime.date.today().strftime("%Y年%m月%d日")
-
-    payload = {
-        "model": "google/gemma-2-9b-it",
-        "inputs": f"""
-あなたは、世界で一番美しく、かつ鋭い的中率を誇る占星術師です。
-**{today}**の12星座占いを生成してください。
-※テスト用にこの文章を追加しました
-
-【出力ルール】
-1. 形式は必ずJSONのみ：{{"星座名": {{"rank": 順位, "text": "占い文", "lucky": "アイテム"}}}}
-2. 順位（rank）が下位（10位〜12位）の星座ほど、以下のことを徹底してください：
-   - 決して突き放さず、寄り添うような優しい口調にすること。
-   - 「今日はデトックスに最適」「今は力を蓄える時期」など、ポジティブな言い換えをすること。
-   - 最後に必ず「大丈夫、明日はもっと良くなるよ」というニュアンスの励ましを入れること。
-3. 専門用語（例：ハウス、逆行、アスペクトなど）を1つ混ぜて、バーナム効果を活かした「本格的」な文章にすること。
-
-星座：牡羊座、金牛座、双子座、蟹座、獅子座、乙女座、天秤座、蠍座、射手座、山羊座、水瓶座、魚座
-""",
-        "parameters": {
-            "max_new_tokens": 1000,
-            "temperature": 0.8,
-            "return_full_text": False
-        }
-    }
-    
-    try:
-        response = requests.post(API_URL, headers=headers, json=payload)
-        
-        if response.status_code == 200:
-            result = response.json()
-            if isinstance(result, list) and len(result) > 0:
-                generated_text = result[0].get('generated_text', '')
-                
-                # JSON部分を抽出
-                json_match = re.search(r'\{.*\}', generated_text, re.DOTALL)
-                if json_match:
-                    json_str = json_match.group()
-                    # バリデーション
-                    parsed = json.loads(json_str)
-                    return json.dumps(parsed, ensure_ascii=False, indent=2)
-                    
-        print(f"API Error: {response.status_code} - {response.text}")
-        return None
-        
-    except Exception as e:
-        print(f"Error: {e}")
-        return None
-
-# フォールバックデータ
+# フォールバックデータ生成関数
 def get_fallback_fortune():
     return json.dumps({
         "牡羊座": {"rank": 1, "text": "太陽が第1ハウスに入り、新しい始まりに最適な日です。行動力が高まり、目標達成への近道になります。", "lucky": "赤いアクセサリー"},
@@ -83,18 +21,78 @@ def get_fallback_fortune():
         "魚座": {"rank": 12, "text": "海王星の影響で感受性が豊かになります。今日はデトックスに最適な日です。芸術や音楽に触れることで心が癒されます。大丈夫、明日はもっと良くなるよ。", "lucky": "水色のアクセサリー"}
     }, ensure_ascii=False, indent=2)
 
+# AI占いデータ取得関数
+def get_ai_fortune():
+    # エンドポイントURLをChat Completion用に変更
+    API_URL = "https://router.huggingface.co" 
+    
+    hf_token = os.getenv("HF_TOKEN")
+    if not hf_token:
+        print("Error: HF_TOKEN environment variable not set.")
+        return None 
+
+    headers = {
+        "Authorization": f"Bearer {hf_token}",
+        "Content-Type": "application/json"
+    }
+    
+    #今日の日付を指定してプロンプトに含める
+    today = datetime.date.today().strftime("%Y年%m%d日")
+    
+    # プロンプトを messages 形式に変換し、JSON形式の部分をエスケープ
+    user_prompt = f"""
+あなたは、世界で一番美しく、かつ鋭い的中率を誇る占星術師です。
+**{today}**の12星座占いを生成してください。
+※テスト用にこの文章を追加しました
+
+【出力ルール】
+1. 形式は必ずJSONのみ：{{"星座名": {{"rank": 順位, "text": "占い文", "lucky": "アイテム"}}}}
+2. 順位（rank）が下位（10位〜12位）の星座ほど、以下のことを徹底してください：
+   - 決して突き放さず、寄り添うような優しい口調にすること。
+   - 「今日はデトックスに最適」「今は力を蓄える時期」など、ポジティブな言い換えをすること。
+   - 最後に必ず「大丈夫、明日はもっと良くなるよ」というニュアンスの励ましを入れること。
+3. 専門用語（例：ハウス、逆行、アスペクトなど）を1つ混ぜて、バーナム効果を活かした「本格的」な文章にすること。
+
+星座：牡羊座、金牛座、双子座、蟹座、獅子座、乙女座、天秤座、蠍座、射手座、山羊座、水瓶座、魚座
+"""
+
+    payload = {
+        # モデル名に「:featherless-ai」を付加する
+        "model": "google/gemma-2-9b-it:featherless-ai", 
+        "messages": [
+            {"role": "user", "content": user_prompt}
+        ],
+        "temperature": 0.8,
+        "max_tokens": 1000 
+    }
+    
+    try:
+        response = requests.post(API_URL, headers=headers, json=payload)
+        response.raise_for_status() 
+        response_json = response.json()
+        # contentにはJSON形式の文字列が入っているので、それをそのまま返す
+        return response_json["choices"][0]["message"]["content"]
+    except requests.exceptions.HTTPError as e:
+        print(f"API HTTP Error: {response.status_code} - {response.text}")
+        return None
+    except Exception as e:
+        print(f"API Error: {e}")
+        return None
+
 # メイン処理
-print("占いデータを取得中...")
-fortune_json = get_ai_fortune()
+if __name__ == "__main__":
+    print("占いデータを取得中...")
+    fortune_json_string = get_ai_fortune()
 
-if fortune_json:
-    print("APIから取得成功")
-    with open("fortune.json", "w", encoding="utf-8") as f:
-        f.write(fortune_json)
-else:
-    print("APIから取得できませんでした。フォールバックデータを使用します。")
-    fallback_data = get_fallback_fortune()
-    with open("fortune.json", "w", encoding="utf-8") as f:
-        f.write(fallback_data)
+    if fortune_json_string:
+        print("APIから取得成功")
+        # APIからはJSON文字列が返ってくるので、そのままファイルに書き込む
+        with open("fortune.json", "w", encoding="utf-8") as f:
+            f.write(fortune_json_string)
+    else:
+        print("APIから取得できませんでした。フォールバックデータを使用します。")
+        fallback_data_string = get_fallback_fortune()
+        with open("fortune.json", "w", encoding="utf-8") as f:
+            f.write(fallback_data_string)
 
-print("fortune.jsonを更新しました")
+    print("fortune.jsonを更新しました")
