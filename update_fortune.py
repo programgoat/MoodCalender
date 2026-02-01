@@ -6,7 +6,14 @@ import re
 def get_ai_fortune():
     # 日本語性能が高いモデルを指定
     API_URL = "https://router.huggingface.co"
-    headers = {"Authorization": "Bearer Mood Calendar"}
+    hf_token = os.getenv("HF_TOKEN")
+    if not hf_token:
+        print("Error: HF_TOKEN environment variable not set.")
+        # トークンがない場合はNoneを返し、後続処理でフォールバックさせる
+        return None 
+
+    headers = {"Authorization": f"Bearer {hf_token}"} # ★このように変更！
+    
     
     payload = {
         "model": "google/gemma-2-9b-it",
