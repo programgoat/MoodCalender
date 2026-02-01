@@ -2,6 +2,7 @@ import requests
 import os
 import json
 import re
+import datetime
 
 def get_ai_fortune():
     # 日本語性能が高いモデルを指定
@@ -14,12 +15,14 @@ def get_ai_fortune():
 
     headers = {"Authorization": f"Bearer {hf_token}"} # ★このように変更！
     
-    
+    #今日の日付を指定してプロンプトに含める
+    today = datetime.date.today().strftime("%Y年%m月%d日")
+
     payload = {
         "model": "google/gemma-2-9b-it",
-        "inputs": """
+        "inputs": f"""
 あなたは、世界で一番美しく、かつ鋭い的中率を誇る占星術師です。
-今日の12星座占いを生成してください。
+**{today}**の12星座占いを生成してください。
 ※テスト用にこの文章を追加しました
 
 【出力ルール】
