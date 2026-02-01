@@ -6,7 +6,7 @@ import datetime
 
 def get_ai_fortune():
     # 日本語性能が高いモデルを指定
-    API_URL = "https://router.huggingface.co"
+    API_URL = "https://api-inference.huggingface.co"
     hf_token = os.getenv("HF_TOKEN")
     if not hf_token:
         print("Error: HF_TOKEN environment variable not set.")
