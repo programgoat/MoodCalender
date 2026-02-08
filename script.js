@@ -722,6 +722,11 @@ function displayError(container) {
     ">
       <div style="font-size: 48px; margin-bottom: 16px;">🔮</div>
       <div style="font-weight: 600; margin-bottom: 8px;">占いデータの読み込みに失敗しました</div>
+      <div style="font-size: 14px;">時間をおいて再度お試しください。</div>
+    </div>
+  `;
+}
+
 /* ---------------------------
    分析モーダル
 --------------------------- */

@@ -23,8 +23,8 @@ def get_fallback_fortune():
 
 # AI占いデータ取得関数
 def get_ai_fortune():
-    # エンドポイントURLをChat Completion用に変更
-    API_URL = "https://router.huggingface.co" 
+    # 正しいHuggingFace推論APIエンドポイント
+    API_URL = "https://api-inference.huggingface.co/models/google/gemma-2-9b-it"
     
     hf_token = os.getenv("HF_TOKEN")
     if not hf_token:
@@ -36,44 +36,56 @@ def get_ai_fortune():
         "Content-Type": "application/json"
     }
     
-    #今日の日付を指定してプロンプトに含める
     today = datetime.date.today().strftime("%Y年%m%d日")
     
-    # プロンプトを messages 形式に変換し、JSON形式の部分をエスケープ
     user_prompt = f"""
 あなたは、世界で一番美しく、かつ鋭い的中率を誇る占星術師です。
 **{today}**の12星座占いを生成してください。
-※テスト用にこの文章を追加しました
 
 【出力ルール】
 1. 形式は必ずJSONのみ：{{"星座名": {{"rank": 順位, "text": "占い文", "lucky": "アイテム"}}}}
-2. 順位（rank）が下位（10位〜12位）の星座ほど、以下のことを徹底してください：
-   - 決して突き放さず、寄り添うような優しい口調にすること。
-   - 「今日はデトックスに最適」「今は力を蓄える時期」など、ポジティブな言い換えをすること。
-   - 最後に必ず「大丈夫、明日はもっと良くなるよ」というニュアンスの励ましを入れること。
-3. 専門用語（例：ハウス、逆行、アスペクトなど）を1つ混ぜて、バーナム効果を活かした「本格的」な文章にすること。
+2. 順位（rank）が下位（10位〜12位）の星座ほど、決して突き放さず、寄り添うような優しい口調にすること。
+3. 専門用語を混ぜて本格的な文章にすること。
 
 星座：牡羊座、金牛座、双子座、蟹座、獅子座、乙女座、天秤座、蠍座、射手座、山羊座、水瓶座、魚座
 """
 
     payload = {
-        # モデル名に「:featherless-ai」を付加する
-        "model": "google/gemma-2-9b-it:featherless-ai", 
-        "messages": [
-            {"role": "user", "content": user_prompt}
-        ],
-        "temperature": 0.8,
-        "max_tokens": 1000 
+        "inputs": user_prompt,
+        "parameters": {
+            "temperature": 0.8,
+            "max_new_tokens": 1000
+        }
     }
     
     try:
         response = requests.post(API_URL, headers=headers, json=payload)
         response.raise_for_status() 
         response_json = response.json()
-        # contentにはJSON形式の文字列が入っているので、それをそのまま返す
-        return response_json["choices"][0]["message"]["content"]
+        
+        # レスポンスから生成テキストを抽出
+        if isinstance(response_json, list) and len(response_json) > 0:
+            generated_text = response_json[0].get("generated_text", "")
+        else:
+            generated_text = response_json.get("generated_text", "")
+        
+        # JSONブロックを抽出（```json ... ```形式の場合）
+        json_match = re.search(r'```(?:json)?\s*(\{.*?\})\s*```', generated_text, re.DOTALL)
+        if json_match:
+            json_str = json_match.group(1)
+        else:
+            json_str = generated_text
+        
+        # JSON文字列をパースして検証
+        parsed = json.loads(json_str)
+        return json.dumps(parsed, ensure_ascii=False, indent=2)
+        
     except requests.exceptions.HTTPError as e:
         print(f"API HTTP Error: {response.status_code} - {response.text}")
+        return None
+    except json.JSONDecodeError as e:
+        print(f"JSON Parse Error: {e}")
+        print(f"Response content: {generated_text[:200]}")
         return None
     except Exception as e:
         print(f"API Error: {e}")
