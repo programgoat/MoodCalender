@@ -87,7 +87,7 @@
             <div>
               <div class="title-text-main">
                 Mood Calendar
-                <span class="title-pill">v4.6.12</span>
+                <span class="title-pill">v4.7.0</span>
               </div>
               <div class="title-text-sub">
                 カレンダーで、1日の気分と良かったことを記録しよう。良かったことはカレンダーに、悪いことは消し去ってカタルシスを得よう！
@@ -108,6 +108,22 @@
             <button id="help-btn" class="help-btn">？</button>
           </div>
         </header>
+
+        <!-- 明日の目標（最上部） -->
+        <section class="card goal-card-top">
+          <div class="goal-top-header">
+            <div class="goal-top-title">
+              <span class="goal-icon">🎯</span>
+              <strong>明日の目標</strong>
+            </div>
+            <button class="btn-goal-compact" id="edit-goal-btn">
+              目標を設定
+            </button>
+          </div>
+          <div class="goal-content-top" id="goal-content">
+            <div class="goal-empty">明日の目標はまだ設定されていません。</div>
+          </div>
+        </section>
 
         <section class="card">
           <div class="card-header">
@@ -192,26 +208,6 @@
           
           <div class="reflection-actions" id="reflection-actions" style="display: none;">
             <button class="btn-secondary" id="reflection-btn">今日の振り返り</button>
-          </div>
-        </section>
-
-        <section class="card">
-          <div class="card-header">
-            <div>
-              <div class="card-title">明日の目標</div>
-              <div class="card-subtitle">
-                明日の目標を設定しましょう。
-              </div>
-            </div>
-          </div>
-
-          <div class="goal-display" id="goal-display">
-            <div class="goal-content" id="goal-content">
-              <div class="goal-empty">明日の目標はまだ設定されていません。</div>
-            </div>
-            <div class="goal-actions">
-              <button class="btn-secondary" id="edit-goal-btn">目標を設定</button>
-            </div>
           </div>
         </section>
 

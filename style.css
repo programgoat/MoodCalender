@@ -1260,32 +1260,59 @@ textarea::placeholder {
 }
 
 /* ===========================
-   目標機能
+   目標機能 - 最上部表示
 =========================== */
 
-.goal-display {
-  background: var(--theme-card-bg);
-  border: 1px solid var(--theme-border);
-  border-radius: 8px;
-  padding: 12px;
-  margin-bottom: 12px;
+/* 目標カードを最上部に配置 */
+.goal-card-top {
+  background: linear-gradient(135deg, rgba(147, 51, 234, 0.06) 0%, rgba(79, 70, 229, 0.06) 100%);
+  border: 2px solid rgba(147, 51, 234, 0.4);
+  box-shadow: 0 2px 8px rgba(147, 51, 234, 0.12);
+  margin-bottom: 16px;
 }
 
-.goal-content {
+.goal-top-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
   margin-bottom: 12px;
+  gap: 12px;
+}
+
+.goal-top-title {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  font-size: 16px;
+  color: var(--text-main);
+}
+
+.goal-icon {
+  font-size: 20px;
+}
+
+.goal-content-top {
+  padding: 12px;
+  background: rgba(147, 51, 234, 0.08);
+  border: 1px solid rgba(147, 51, 234, 0.2);
+  border-radius: 8px;
+  min-height: 60px;
+  display: flex;
+  align-items: center;
 }
 
 .goal-text {
-  font-size: 14px;
-  font-weight: 500;
+  font-size: 15px;
+  font-weight: 600;
   color: var(--text-main);
-  line-height: 1.5;
+  line-height: 1.6;
   margin-bottom: 8px;
 }
 
 .goal-empty {
   color: var(--text-sub);
   font-style: italic;
+  font-size: 14px;
 }
 
 .goal-meta {
@@ -1299,6 +1326,45 @@ textarea::placeholder {
   background: rgba(56, 189, 248, 0.1);
   padding: 2px 6px;
   border-radius: 4px;
+}
+
+/* コンパクトなボタン */
+.btn-goal-compact {
+  background: linear-gradient(135deg, #9333ea 0%, #7c3aed 100%);
+  color: white;
+  border: none;
+  border-radius: 8px;
+  padding: 8px 16px;
+  font-size: 14px;
+  font-weight: 600;
+  cursor: pointer;
+  transition: all 0.2s ease;
+  box-shadow: 0 2px 6px rgba(147, 51, 234, 0.3);
+  white-space: nowrap;
+  flex-shrink: 0;
+}
+
+.btn-goal-compact:hover {
+  background: linear-gradient(135deg, #7c3aed 0%, #6d28d9 100%);
+  transform: translateY(-1px);
+  box-shadow: 0 4px 8px rgba(147, 51, 234, 0.4);
+}
+
+.btn-goal-compact:active {
+  transform: translateY(0);
+}
+
+/* 旧スタイルの互換性維持 */
+.goal-display {
+  background: rgba(255, 255, 255, 0.5);
+  border: 2px solid rgba(147, 51, 234, 0.2);
+  border-radius: 12px;
+  padding: 16px;
+  margin-bottom: 12px;
+}
+
+.goal-content {
+  margin-bottom: 12px;
 }
 
 .goal-actions {
