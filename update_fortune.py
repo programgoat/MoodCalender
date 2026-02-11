@@ -123,8 +123,6 @@ def get_ai_fortune():
                 retry_delay *= 2
                 continue
             return None
-    
-    return None
 
 # メイン処理
 if __name__ == "__main__":
