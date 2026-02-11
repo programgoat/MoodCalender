@@ -3,6 +3,7 @@ import requests
 import json
 import re
 import datetime
+import time
 
 # フォールバックデータ生成関数
 def get_fallback_fortune():
@@ -23,8 +24,8 @@ def get_fallback_fortune():
 
 # AI占いデータ取得関数
 def get_ai_fortune():
-    # 正しいHuggingFace推論APIエンドポイント
-    API_URL = "https://api-inference.huggingface.co/models/google/gemma-2-9b-it"
+    # 新しいHuggingFace推論APIエンドポイント（router.huggingface.coに変更）
+    API_URL = "https://router.huggingface.co/models/google/gemma-2-9b-it"
     
     hf_token = os.getenv("HF_TOKEN")
     if not hf_token:
@@ -58,38 +59,66 @@ def get_ai_fortune():
         }
     }
     
-    try:
-        response = requests.post(API_URL, headers=headers, json=payload)
-        response.raise_for_status() 
-        response_json = response.json()
-        
-        # レスポンスから生成テキストを抽出
-        if isinstance(response_json, list) and len(response_json) > 0:
-            generated_text = response_json[0].get("generated_text", "")
-        else:
-            generated_text = response_json.get("generated_text", "")
-        
-        # JSONブロックを抽出（```json ... ```形式の場合）
-        json_match = re.search(r'```(?:json)?\s*(\{.*?\})\s*```', generated_text, re.DOTALL)
-        if json_match:
-            json_str = json_match.group(1)
-        else:
-            json_str = generated_text
-        
-        # JSON文字列をパースして検証
-        parsed = json.loads(json_str)
-        return json.dumps(parsed, ensure_ascii=False, indent=2)
-        
-    except requests.exceptions.HTTPError as e:
-        print(f"API HTTP Error: {response.status_code} - {response.text}")
-        return None
-    except json.JSONDecodeError as e:
-        print(f"JSON Parse Error: {e}")
-        print(f"Response content: {generated_text[:200]}")
-        return None
-    except Exception as e:
-        print(f"API Error: {e}")
-        return None
+    # リトライロジックを追加（最大3回まで）
+    max_retries = 3
+    retry_delay = 5  # 初期遅延（秒）
+    
+    for attempt in range(max_retries):
+        try:
+            # タイムアウトを設定（60秒）
+            response = requests.post(API_URL, headers=headers, json=payload, timeout=60)
+            response.raise_for_status() 
+            response_json = response.json()
+            
+            # レスポンスから生成テキストを抽出
+            if isinstance(response_json, list) and len(response_json) > 0:
+                generated_text = response_json[0].get("generated_text", "")
+            else:
+                generated_text = response_json.get("generated_text", "")
+            
+            # JSONブロックを抽出（```json ... ```形式の場合）
+            json_match = re.search(r'```(?:json)?\s*(\{.*?\})\s*```', generated_text, re.DOTALL)
+            if json_match:
+                json_str = json_match.group(1)
+            else:
+                json_str = generated_text
+            
+            # JSON文字列をパースして検証
+            parsed = json.loads(json_str)
+            print(f"APIから取得成功（試行回数: {attempt + 1}）")
+            return json.dumps(parsed, ensure_ascii=False, indent=2)
+            
+        except requests.exceptions.HTTPError as e:
+            print(f"API HTTP Error (試行 {attempt + 1}/{max_retries}): {response.status_code} - {response.text}")
+            # 503エラー（サービス一時利用不可）の場合はリトライ
+            if response.status_code == 503 and attempt < max_retries - 1:
+                print(f"{retry_delay}秒待機してリトライします...")
+                time.sleep(retry_delay)
+                retry_delay *= 2  # 指数バックオフ
+                continue
+            return None
+        except requests.exceptions.Timeout as e:
+            print(f"API Timeout Error (試行 {attempt + 1}/{max_retries}): {e}")
+            if attempt < max_retries - 1:
+                print(f"{retry_delay}秒待機してリトライします...")
+                time.sleep(retry_delay)
+                retry_delay *= 2
+                continue
+            return None
+        except json.JSONDecodeError as e:
+            print(f"JSON Parse Error: {e}")
+            print(f"Response content: {generated_text[:200]}")
+            return None
+        except Exception as e:
+            print(f"API Error (試行 {attempt + 1}/{max_retries}): {e}")
+            if attempt < max_retries - 1:
+                print(f"{retry_delay}秒待機してリトライします...")
+                time.sleep(retry_delay)
+                retry_delay *= 2
+                continue
+            return None
+    
+    return None
 
 # メイン処理
 if __name__ == "__main__":
