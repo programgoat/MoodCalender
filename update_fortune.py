@@ -112,8 +112,12 @@ def get_ai_fortune():
             # generated_textが定義されていない場合のフォールバック
             try:
                 print(f"Response content: {generated_text[:200]}")
-            except NameError:
-                print(f"Response content: {response.text[:200]}")
+            except (NameError, UnboundLocalError):
+                # responseが定義されていない可能性もある
+                try:
+                    print(f"Response content: {response.text[:200]}")
+                except (NameError, UnboundLocalError):
+                    print("Response content: (unavailable)")
             return None
         except Exception as e:
             print(f"API Error (試行 {attempt + 1}/{max_retries}): {e}")
