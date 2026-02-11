@@ -89,9 +89,11 @@ def get_ai_fortune():
             return json.dumps(parsed, ensure_ascii=False, indent=2)
             
         except requests.exceptions.HTTPError as e:
-            print(f"API HTTP Error (試行 {attempt + 1}/{max_retries}): {response.status_code} - {response.text}")
-            # 503エラー（サービス一時利用不可）の場合はリトライ
-            if response.status_code == 503 and attempt < max_retries - 1:
+            # レスポンステキストを安全に切り詰める
+            response_preview = response.text[:200] if len(response.text) > 200 else response.text
+            print(f"API HTTP Error (試行 {attempt + 1}/{max_retries}): {response.status_code} - {response_preview}")
+            # 一時的なエラー（429, 502, 503）の場合はリトライ
+            if response.status_code in [429, 502, 503] and attempt < max_retries - 1:
                 print(f"{retry_delay}秒待機してリトライします...")
                 time.sleep(retry_delay)
                 retry_delay *= 2  # 指数バックオフ
@@ -107,7 +109,11 @@ def get_ai_fortune():
             return None
         except json.JSONDecodeError as e:
             print(f"JSON Parse Error: {e}")
-            print(f"Response content: {generated_text[:200]}")
+            # generated_textが定義されていない場合のフォールバック
+            try:
+                print(f"Response content: {generated_text[:200]}")
+            except NameError:
+                print(f"Response content: {response.text[:200]}")
             return None
         except Exception as e:
             print(f"API Error (試行 {attempt + 1}/{max_retries}): {e}")
