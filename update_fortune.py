@@ -24,7 +24,7 @@ def get_fallback_fortune():
 # AI占いデータ取得関数
 def get_ai_fortune():
     # 正しいHuggingFace推論APIエンドポイント
-    API_URL = "https://api-inference.huggingface.co/models/google/gemma-2-9b-it"
+    API_URL = "https://router.huggingface.co/models/google/gemma-2-9b-it"
     
     hf_token = os.getenv("HF_TOKEN")
     if not hf_token:
